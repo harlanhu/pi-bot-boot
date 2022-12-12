@@ -30,7 +30,12 @@ public enum AddressEnums {
     /**
      * Device address if pin is connected to SCL
      */
-    SCL(0x4B);
+    SCL(0x4B),
+
+    /**
+     * oled
+     */
+    OLED(0x3C);
 
     /**
      * device address on I2C

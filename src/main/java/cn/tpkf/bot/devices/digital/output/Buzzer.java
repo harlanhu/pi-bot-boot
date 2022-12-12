@@ -1,11 +1,10 @@
-package cn.tpkf.bot.devices.digital;
+package cn.tpkf.bot.devices.digital.output;
 
 import cn.tpkf.bot.enums.PinEnums;
 import cn.tpkf.bot.utils.GpioConfigUtils;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.util.concurrent.locks.ReentrantLock;
@@ -17,7 +16,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * @date 2022 12 09 下午 11:11
  */
 @Getter
-@EqualsAndHashCode(callSuper = true)
 public class Buzzer extends AbstractDoDevice {
 
     private final Context context;

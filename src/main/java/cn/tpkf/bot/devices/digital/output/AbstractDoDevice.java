@@ -1,4 +1,4 @@
-package cn.tpkf.bot.devices.digital;
+package cn.tpkf.bot.devices.digital.output;
 
 import cn.tpkf.bot.devices.AbstractDelayDevice;
 import com.pi4j.io.gpio.digital.DigitalOutput;

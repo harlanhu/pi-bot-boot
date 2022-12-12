@@ -11,7 +11,6 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public abstract class AbstractPwmDevice extends AbstractDelayDevice implements PwmDevice {
 
-
     public void on(int frequency) {
         on(frequency, 1000);
     }

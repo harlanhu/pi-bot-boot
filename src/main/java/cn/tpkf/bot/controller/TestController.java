@@ -1,10 +1,12 @@
 package cn.tpkf.bot.controller;
 
-import cn.tpkf.bot.devices.digital.Buzzer;
-import cn.tpkf.bot.devices.i2c.Pcf8591;
+import cn.tpkf.bot.devices.digital.output.Buzzer;
+import cn.tpkf.bot.devices.i2c.adda.Pcf8591;
+import cn.tpkf.bot.devices.i2c.display.oled.SSD1306;
 import com.alibaba.fastjson2.JSON;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +26,8 @@ public class TestController {
     private final Buzzer buzzer;
 
     private final Pcf8591 pcf8591;
+
+    private final SSD1306 ssd12832;
 
     @GetMapping("/on")
     public String on() {
@@ -50,6 +54,13 @@ public class TestController {
         mapping.put("AIN2", pcf8591.readAin2());
         mapping.put("AIN3", pcf8591.readAin3());
         return JSON.toJSONString(mapping);
+    }
+
+    @GetMapping("/ssd/{text}")
+    public String ssd(@PathVariable String text) {
+        ssd12832.drawString(text, 2, 2, true);
+        ssd12832.update();
+        return "ok";
     }
 
 }
