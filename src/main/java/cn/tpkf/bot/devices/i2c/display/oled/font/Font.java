@@ -1,12 +1,16 @@
 package cn.tpkf.bot.devices.i2c.display.oled.font;
 
 import cn.tpkf.bot.devices.i2c.display.oled.AbstractOledDisplayDevice;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * @author Harlan
  * @email isharlan.hu@gmail.com
  * @date 2022 12 11 下午 12:15
  */
+@Getter
+@AllArgsConstructor
 public enum Font {
 
     FONT_5X8(0, 255, 5, 8, 6, 9, new byte[]{
@@ -334,61 +338,21 @@ public enum Font {
             (byte) 0x10, (byte) 0x10, (byte) 0x10, (byte) 0x00,
     });
 
-    private final int minChar, maxChar, width, height, outerWidth, outerHeight;
+    private final int minChar;
+
+    private final int maxChar;
+
+    private final int width;
+
+    private final int height;
+
+    private final int outerWidth;
+
+    private final int outerHeight;
 
     private final byte[] data;
 
-    private Font(int minChar, int maxChar, int width, int height, int outerWidth, int outerHeight, byte[] data) {
-        this.minChar = minChar;
-        this.maxChar = maxChar;
-        this.width = width;
-        this.height = height;
-        this.outerWidth = outerWidth;
-        this.outerHeight = outerHeight;
-        this.data = data;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getOuterWidth() {
-        return outerWidth;
-    }
-
-    public int getOuterHeight() {
-        return outerHeight;
-    }
-
     public byte getData(int offset) {
         return this.data[offset];
-    }
-
-    public int getMinChar() {
-        return minChar;
-    }
-
-    public int getMaxChar() {
-        return maxChar;
-    }
-
-    public void drawChar(AbstractOledDisplayDevice display, char c, int x, int y, boolean state) {
-        if (c > maxChar || c < minChar) {
-            c = '?';
-        }
-        c -= minChar;
-        for (int i = 0; i < width; ++i) {
-            int line = data[(c * width) + i];
-            for (int j = 0; j < height * 2; j += 2) {
-                if ((line & 0x01) > 0) {
-                    display.setPixel(x + i, 1 + 2 * y + j, state);
-                }
-                line >>= 1;
-            }
-        }
     }
 }

@@ -115,7 +115,19 @@ public abstract class AbstractOledDisplayDevice extends AbstractI2cDevice implem
     public void drawChar(char c, Font font, int x, int y, boolean state) {
         lock.lock();
         try {
-            font.drawChar(this, c, x, y, state);
+            if (c > font.getMaxChar() || c < font.getMinChar()) {
+                c = '?';
+            }
+            c -= font.getMinChar();
+            for (int i = 0; i < width; ++i) {
+                int line = font.getData((c * width) + i);
+                for (int j = 0; j < height * 2; j += 2) {
+                    if ((line & 0x01) > 0) {
+                        setPixel(x + i, 1 + 2 * y + j, state);
+                    }
+                    line >>= 1;
+                }
+            }
         } finally {
             lock.unlock();
         }
