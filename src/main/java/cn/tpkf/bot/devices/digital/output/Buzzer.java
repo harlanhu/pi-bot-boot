@@ -7,6 +7,7 @@ import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**

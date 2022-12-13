@@ -9,7 +9,7 @@ import com.pi4j.io.pwm.Pwm;
  * @email isharlan.hu@gmail.com
  * @date 2022 12 10 下午 06:21
  */
-public interface PwmDevice extends Device, SingleDevice {
+public interface PwmDevice extends SingleDevice {
 
     /**
      * 获取Pwm
