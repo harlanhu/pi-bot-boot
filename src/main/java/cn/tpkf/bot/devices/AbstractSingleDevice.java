@@ -1,5 +1,7 @@
 package cn.tpkf.bot.devices;
 
+import com.pi4j.context.Context;
+
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -7,11 +9,12 @@ import java.util.concurrent.locks.ReentrantLock;
  * @email isharlan.hu@gmali.com
  * @date 2022/12/13
  */
-public abstract class AbstractSingleDevice implements SingleDevice {
+public abstract class AbstractSingleDevice extends AbstractDevice implements SingleDevice {
 
     protected final ReentrantLock lock;
 
-    protected AbstractSingleDevice() {
+    protected AbstractSingleDevice(Context pi4jContext, String name) {
+        super(pi4jContext, name);
         this.lock = new ReentrantLock();
     }
 

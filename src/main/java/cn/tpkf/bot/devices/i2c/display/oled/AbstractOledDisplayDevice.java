@@ -8,7 +8,6 @@ import cn.tpkf.bot.utils.GpioConfigUtils;
 import com.pi4j.context.Context;
 import com.pi4j.io.i2c.I2C;
 import lombok.Getter;
-
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.util.Arrays;
@@ -21,16 +20,6 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @Getter
 public abstract class AbstractOledDisplayDevice extends AbstractI2cDevice implements OledDisplayDevice {
-
-    protected final String name;
-
-    protected final Context context;
-
-    protected final I2C i2c;
-
-    protected final int i2cBus;
-
-    protected final AddressEnums address;
 
     protected final int width;
 
@@ -45,11 +34,7 @@ public abstract class AbstractOledDisplayDevice extends AbstractI2cDevice implem
     protected final byte[] dataBuffer;
 
     protected AbstractOledDisplayDevice(Context pi4jContext, int i2cBus, AddressEnums address, String name, int width, int height, Rotation rotation) {
-        this.context = pi4jContext;
-        this.i2c = pi4jContext.create(GpioConfigUtils.buildI2cConfig(pi4jContext, i2cBus, address.getValue(), name));;
-        this.name = name;
-        this.i2cBus = i2cBus;
-        this.address = address;
+        super(pi4jContext, name, i2cBus, address);
         this.width = width;
         this.height = height;
         this.maxIndex = (height / 8) * width;

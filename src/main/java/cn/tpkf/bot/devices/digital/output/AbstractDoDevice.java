@@ -18,21 +18,15 @@ import java.util.concurrent.locks.ReentrantLock;
 @Getter
 public abstract class AbstractDoDevice extends AbstractDelayDevice implements DigitalOutputDevice {
 
-    protected final Context context;
-
     protected final DigitalOutput digitalOutput;
-
-
-    protected final String name;
 
     protected final PinEnums pin;
 
     protected final ReentrantLock lock;
 
     protected AbstractDoDevice(Context pi4jContext, PinEnums pin, String name, DigitalState initial, DigitalState shutdown) {
-        this.context = pi4jContext;
+        super(pi4jContext, name);
         this.digitalOutput = pi4jContext.create(GpioConfigUtils.buildDigitalOutputConfig(pi4jContext, pin, name, initial, shutdown));
-        this.name = name;
         this.pin = pin;
         this.lock = new ReentrantLock();
     }

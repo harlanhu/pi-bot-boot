@@ -16,54 +16,34 @@ import lombok.Getter;
 @Getter
 public class Pcf8591 extends AbstractI2cDevice {
 
-    private final Context context;
+    private final double maxVoltage;
 
-    private final String name;
+    private final byte rA0;
 
-    private int i2cBus = 1;
+    private final byte rA1;
 
-    private final I2C i2c;
+    private final byte rA2;
 
-    private AddressEnums address = AddressEnums.GND;
-
-    private double maxVoltage = 5;
-
-    private byte rA0 = 0x45;
-
-    private byte rA1 = 0x46;
-
-    private byte rA2 = 0x47;
-
-    private byte rA3 = 0x44;
+    private final byte rA3;
 
     public Pcf8591(Context pi4jContext, String name) {
-        this.context = pi4jContext;
-        this.name = name;
-        this.i2c = pi4jContext.create(GpioConfigUtils.buildI2cConfig(pi4jContext, i2cBus, address.getValue(), name));
+        this(pi4jContext, name, 1, AddressEnums.GND);
     }
 
     public Pcf8591(Context pi4jContext, String name, int i2cBus) {
-        this(pi4jContext, name);
-        this.i2cBus = i2cBus;
+        this(pi4jContext, name, i2cBus, AddressEnums.GND);
     }
 
-    public Pcf8591(Context pi4jContext, String name, AddressEnums address, int i2cBus) {
-        this(pi4jContext, name, i2cBus);
-        this.address = address;
-        this.i2cBus = i2cBus;
+    public Pcf8591(Context pi4jContext, String name, int i2cBus, AddressEnums address) {
+        this(pi4jContext, name, i2cBus, address, 5);
     }
 
-    public Pcf8591(Context pi4jContext, String name, AddressEnums address, int i2cBus, double maxVoltage) {
-        this(pi4jContext, name, address, i2cBus);
-        this.maxVoltage = maxVoltage;
-        this.address = address;
-        this.i2cBus = i2cBus;
+    public Pcf8591(Context pi4jContext, String name, int i2cBus, AddressEnums address, double maxVoltage) {
+        this(pi4jContext, name, i2cBus, address, maxVoltage, (byte) 0x45, (byte) 0x46, (byte) 0x47, (byte) 0x44);
     }
 
-    public Pcf8591(Context pi4jContext, String name, AddressEnums address, double maxVoltage, int i2cBus, byte rA0, byte rA1, byte rA2, byte rA3) {
-        this(pi4jContext, name, address, i2cBus, maxVoltage);
-        this.address = address;
-        this.i2cBus = i2cBus;
+    public Pcf8591(Context pi4jContext, String name, int i2cBus, AddressEnums address, double maxVoltage, byte rA0, byte rA1, byte rA2, byte rA3) {
+        super(pi4jContext, name, i2cBus, address);
         this.maxVoltage = maxVoltage;
         this.rA0 = rA0;
         this.rA1 = rA1;
