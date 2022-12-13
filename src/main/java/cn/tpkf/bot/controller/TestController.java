@@ -59,7 +59,7 @@ public class TestController {
     @GetMapping("/ssd/{text}")
     public String ssd(@PathVariable String text) {
         ssd12832.drawString(text, 2, 2, true);
-        ssd12832.update();
+        ssd12832.updateDataBuffer();
         return "ok";
     }
 

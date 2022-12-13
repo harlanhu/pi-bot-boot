@@ -32,6 +32,6 @@ public class DeviceInitializer {
 
     @Bean
     public SSD1306 ssd12832() {
-        return new SSD1306(pi4jContext, "ssd12832");
+        return new SSD1306(pi4jContext, "oled-1", 124, 32);
     }
 }

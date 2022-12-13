@@ -18,22 +18,13 @@ import java.util.concurrent.locks.ReentrantLock;
 @Getter
 public class Buzzer extends AbstractDoDevice {
 
-    private final Context context;
 
-    private final DigitalOutput digitalOutput;
-
-    private final String name;
-
-    private final PinEnums pin;
-
-    private final ReentrantLock lock;
+    public Buzzer(Context pi4jContext, PinEnums pin, String name, DigitalState initial, DigitalState shutdown) {
+        super(pi4jContext, pin, name, initial, shutdown);
+    }
 
     public Buzzer(Context pi4jContext, PinEnums pin, String name) {
-        this.name = name;
-        this.context = pi4jContext;
-        this.pin = pin;
-        this.lock = new ReentrantLock();
-        digitalOutput = pi4jContext.create(GpioConfigUtils.buildDigitalOutputConfig(pi4jContext, pin, name, DigitalState.LOW, DigitalState.LOW));
+        super(pi4jContext, pin, name, DigitalState.HIGH, DigitalState.LOW);
     }
 
     public void setState(boolean state) {

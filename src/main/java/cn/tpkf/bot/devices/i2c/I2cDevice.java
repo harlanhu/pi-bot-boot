@@ -30,11 +30,6 @@ public interface I2cDevice extends Device {
     int getI2cBus();
 
     /**
-     * 关闭设备
-     */
-    void close();
-
-    /**
      * 是否开启
      * @return boolean
      */

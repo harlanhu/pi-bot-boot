@@ -9,11 +9,6 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public interface SingleDevice extends Device {
 
-    /**
-     * 获取锁
-     * @return lock
-     */
-    ReentrantLock getLock();
 
     /**
      * 是否上锁

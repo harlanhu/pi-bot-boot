@@ -12,10 +12,6 @@ public abstract class AbstractI2cDevice implements I2cDevice {
         return getI2c().getBus();
     }
 
-    @Override
-    public void close() {
-        getI2c().close();
-    }
 
     @Override
     public boolean isOpen() {

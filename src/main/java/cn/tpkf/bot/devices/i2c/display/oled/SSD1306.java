@@ -54,6 +54,7 @@ public class SSD1306 extends AbstractOledDisplayDevice {
     private static final byte SSD1306_PAGE_ADDR = (byte) 0x22;
 
     private static final byte SSD1306_COM_SCAN_INC = (byte) 0xC0;
+
     private static final byte SSD1306_COM_SCAN_DEC = (byte) 0xC8;
 
     private static final byte SSD1306_SEGRE_MAP = (byte) 0xA0;
@@ -64,53 +65,24 @@ public class SSD1306 extends AbstractOledDisplayDevice {
 
     private static final byte SSD1306_SWITCH_CAP_VCC = (byte) 0x2;
 
-    private final String name;
-
-    private final Context context;
-
-    private final I2C i2c;
-
-    private int i2cBus = 1;
-
-    private AddressEnums address = AddressEnums.OLED;
-
-    public SSD1306(Context pi4jContext, String name) {
-        this(pi4jContext, name, Rotation.DEG_0);
+    public SSD1306(Context pi4jContext, String name, int width, int height) {
+        this(pi4jContext, name, 1, AddressEnums.OLED, width, height, Rotation.DEG_0);
     }
 
-    public SSD1306(Context pi4jContext, String name, Rotation rotation) {
-        super(true, 128, 32, rotation);
-        this.name = name;
-        this.context = pi4jContext;
-        this.i2c = pi4jContext.create(GpioConfigUtils.buildI2cConfig(pi4jContext, i2cBus, address.getValue(), name));
+    public SSD1306(Context pi4jContext, String name, int width, int height,Rotation rotation) {
+        this(pi4jContext, name, 1, AddressEnums.OLED, width, height, rotation);
+    }
+
+    public SSD1306(Context pi4jContext, String name, int i2cBus, AddressEnums address, int width, int height, Rotation rotation) {
+        super(pi4jContext, i2cBus, address, name + "-SSD1306@" + width + height, width, height, rotation);
         clear();
-        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::reset));
         init();
-    }
-
-    public SSD1306(Context pi4jContext, String name, int i2cBus, AddressEnums address) {
-        this(pi4jContext, name, i2cBus, address, Rotation.DEG_0);
-    }
-
-    public SSD1306(Context pi4jContext, String name, int i2cBus, AddressEnums address, Rotation rotation) {
-        this(pi4jContext, name, rotation);
-        this.i2cBus = i2cBus;
-        this.address = address;
     }
 
     @Override
     public void setUp() {
 
-    }
-
-    @Override
-    public int getWidth() {
-        return super.width;
-    }
-
-    @Override
-    public int getHeight() {
-        return super.height;
     }
 
     @Override
@@ -165,17 +137,7 @@ public class SSD1306 extends AbstractOledDisplayDevice {
     }
 
     @Override
-    public void close() {
-        i2c.close();
-    }
-
-    @Override
-    public boolean isOpen() {
-        return this.i2c.isOpen();
-    }
-
-    @Override
-    public void update() {
+    public void updateDataBuffer() {
         int displayWidth = getDisplayWidth();
         int displayHeight = getDisplayHeight();
         writeCommand(SSD1306_COLUMN_ADDR);

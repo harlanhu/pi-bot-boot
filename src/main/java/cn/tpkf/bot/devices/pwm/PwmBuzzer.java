@@ -16,23 +16,10 @@ import java.util.concurrent.locks.ReentrantLock;
  * @email isharlan.hu@gmail.com
  * @date 2022 12 09 下午 10:14
  */
-@Getter
-@EqualsAndHashCode(callSuper = true)
 public class PwmBuzzer extends AbstractPwmDevice {
 
-    private final Pwm pwm;
-
-    private final String name;
-
-    private final Context context;
-
-    private final ReentrantLock lock;
-
     public PwmBuzzer(Context pi4jContext, PinEnums pinEnums, String name, PwmType pwmType, int initial, int shutdown) {
-        this.name = name;
-        this.context = pi4jContext;
-        pwm = pi4jContext.create(GpioConfigUtils.buildPwmConfig(pi4jContext, pinEnums, name, pwmType, initial, shutdown));
-        lock = new ReentrantLock();
+        super(pi4jContext, pinEnums, name, pwmType, initial, shutdown);
     }
 
     @Override

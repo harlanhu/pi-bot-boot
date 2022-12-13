@@ -1,7 +1,12 @@
 package cn.tpkf.bot.devices.i2c.display.oled;
 
+import cn.tpkf.bot.devices.i2c.AbstractI2cDevice;
 import cn.tpkf.bot.devices.i2c.display.oled.font.Font;
 import cn.tpkf.bot.devices.i2c.display.oled.font.Rotation;
+import cn.tpkf.bot.enums.AddressEnums;
+import cn.tpkf.bot.utils.GpioConfigUtils;
+import com.pi4j.context.Context;
+import com.pi4j.io.i2c.I2C;
 import lombok.Getter;
 
 import java.awt.image.BufferedImage;
@@ -15,7 +20,17 @@ import java.util.concurrent.locks.ReentrantLock;
  * @date 2022 12 11 下午 12:30
  */
 @Getter
-public abstract class AbstractOledDisplayDevice implements OledDisplayDevice {
+public abstract class AbstractOledDisplayDevice extends AbstractI2cDevice implements OledDisplayDevice {
+
+    protected final String name;
+
+    protected final Context context;
+
+    protected final I2C i2c;
+
+    protected final int i2cBus;
+
+    protected final AddressEnums address;
 
     protected final int width;
 
@@ -27,12 +42,14 @@ public abstract class AbstractOledDisplayDevice implements OledDisplayDevice {
 
     protected final ReentrantLock lock;
 
-    protected final boolean is32;
-
     protected final byte[] dataBuffer;
 
-    protected AbstractOledDisplayDevice(boolean is32, int height, int width, Rotation rotation) {
-        this.is32 = is32;
+    protected AbstractOledDisplayDevice(Context pi4jContext, int i2cBus, AddressEnums address, String name, int width, int height, Rotation rotation) {
+        this.context = pi4jContext;
+        this.i2c = pi4jContext.create(GpioConfigUtils.buildI2cConfig(pi4jContext, i2cBus, address.getValue(), name));;
+        this.name = name;
+        this.i2cBus = i2cBus;
+        this.address = address;
         this.width = width;
         this.height = height;
         this.maxIndex = (height / 8) * width;
@@ -49,11 +66,6 @@ public abstract class AbstractOledDisplayDevice implements OledDisplayDevice {
     @Override
     public Rotation getRotation() {
         return rotation;
-    }
-
-    @Override
-    public ReentrantLock getLock() {
-        return lock;
     }
 
     @Override
@@ -157,7 +169,7 @@ public abstract class AbstractOledDisplayDevice implements OledDisplayDevice {
     }
 
     public void drawImage(BufferedImage image, int x, int y) {
-        BufferedImage tmpImage = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_BYTE_BINARY);
+        BufferedImage tmpImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
         tmpImage.getGraphics().drawImage(image, x, y, null);
         int index = 0;
         int pixelval;
@@ -175,21 +187,19 @@ public abstract class AbstractOledDisplayDevice implements OledDisplayDevice {
 
     public void drawStringCentered(String text, Font font, int y, boolean state) {
         final int strSizeX = text.length() * font.getOuterWidth();
-        final int x = (this.getWidth() - strSizeX) / 2;
+        final int x = (width - strSizeX) / 2;
         drawString(text, font, x, y, state);
     }
 
-    protected void clear() {
+    public void clear() {
         Arrays.fill(dataBuffer, (byte) 0x00);
     }
 
-    protected void shutdown() {
+    public void reset() {
         //before we shut down we clear the display
         clear();
-        update();
+        updateDataBuffer();
     }
-
-    public abstract void update();
 
     @Override
     public int getDisplayHeight() {
