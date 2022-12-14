@@ -8,6 +8,7 @@ import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmType;
 import lombok.Getter;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -45,15 +46,14 @@ public abstract class AbstractPwmDevice extends AbstractDelayDevice implements P
     }
 
     public void on(int frequency, long duration) {
-        lock.lock();
         if (frequency <= 0 || duration <= 0) {
             off();
             return;
         }
         lock.lock();
         try {
-            getPwm().on(50, frequency);
-            delay(duration);
+            pwm.on(50, frequency);
+            delay(duration, TimeUnit.DAYS);
             off();
         } finally {
             lock.unlock();
@@ -61,7 +61,7 @@ public abstract class AbstractPwmDevice extends AbstractDelayDevice implements P
     }
 
     public void off() {
-        getPwm().off();
+        pwm.off();
     }
 
     @Override

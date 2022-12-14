@@ -5,6 +5,8 @@ import cn.tpkf.bot.devices.SingleDevice;
 import com.pi4j.io.gpio.digital.DigitalOutput;
 import com.pi4j.io.gpio.digital.DigitalState;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Harlan
  * @email isharlan.hu@gmail.com
@@ -19,6 +21,11 @@ public interface DigitalOutputDevice extends Device, SingleDevice {
      */
     DigitalOutput getDigitalOutput();
 
+    /**
+     * 获取当前状态
+     *
+     * @return 当前状态
+     */
     DigitalState getState();
 
     /**
@@ -29,9 +36,10 @@ public interface DigitalOutputDevice extends Device, SingleDevice {
     /**
      * 设置电平
      *
-     * @param duration 持续时间 毫秒
+     * @param duration 持续时间
+     * @param timeUnit 单位
      */
-    void on(long duration);
+    void on(long duration, TimeUnit timeUnit);
 
     /**
      * 设置电平
@@ -61,8 +69,9 @@ public interface DigitalOutputDevice extends Device, SingleDevice {
      *
      * @param duration 开关间隔
      * @param loop     开关次数
+     * @param timeUnit 单位
      */
-    void loop(long duration, int loop);
+    void loop(long duration, int loop, TimeUnit timeUnit);
 
     /**
      * 训话开关
@@ -76,8 +85,9 @@ public interface DigitalOutputDevice extends Device, SingleDevice {
      * @param loop     开关次数
      * @param interval 间隔时间
      * @param cycle    循环次数
+     * @param timeUnit 单位
      */
-    void cycle(long duration, int loop, long interval, int cycle);
+    void cycle(long duration, int loop, long interval, int cycle, TimeUnit timeUnit);
 
 
 }

@@ -8,6 +8,7 @@ import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalState;
 import lombok.Getter;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -66,11 +67,11 @@ public abstract class AbstractDoDevice extends AbstractDelayDevice implements Di
         digitalOutput.setState(onState.getValue().intValue());
     }
 
-    public void on(long duration) {
+    public void on(long duration, TimeUnit timeUnit) {
         lock.lock();
         try {
             on();
-            delay(duration);
+            delay(duration, timeUnit);
             off();
         } finally {
             lock.unlock();
@@ -90,14 +91,14 @@ public abstract class AbstractDoDevice extends AbstractDelayDevice implements Di
         digitalOutput.setState(state.getValue().intValue());
     }
 
-    public void loop(long duration, int loop) {
+    public void loop(long duration, int loop, TimeUnit timeUnit) {
         if (loop <= 0 || duration <= 0) {
             return;
         }
         lock.lock();
         try {
             while (loop >= 1) {
-                on(duration);
+                on(duration, timeUnit);
                 loop--;
             }
         } finally {
@@ -106,18 +107,18 @@ public abstract class AbstractDoDevice extends AbstractDelayDevice implements Di
     }
 
     public void loop() {
-        loop(200, 1);
+        loop(200, 1, TimeUnit.MILLISECONDS);
     }
 
-    public void cycle(long duration, int loop, long interval, int cycle) {
+    public void cycle(long duration, int loop, long interval, int cycle, TimeUnit timeUnit) {
         if (duration == 0 || loop == 0 || cycle == 0 || interval < 0) {
             return;
         }
         lock.lock();
         try {
             while (cycle >= 1) {
-                loop(duration, loop);
-                delay(interval);
+                loop(duration, loop, timeUnit);
+                delay(interval, timeUnit);
                 cycle--;
             }
         } finally {
@@ -126,7 +127,7 @@ public abstract class AbstractDoDevice extends AbstractDelayDevice implements Di
     }
 
     public void cycle() {
-        cycle(200, 3, 500, 1);
+        cycle(200, 3, 500, 1, TimeUnit.MILLISECONDS);
     }
 
     @Override

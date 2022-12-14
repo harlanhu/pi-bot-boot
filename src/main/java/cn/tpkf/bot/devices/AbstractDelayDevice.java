@@ -18,11 +18,13 @@ public abstract class AbstractDelayDevice extends AbstractDevice implements Devi
 
     /**
      * 延迟
-     * @param milliSeconds 毫秒数
+     *
+     * @param time     时间
+     * @param timeUnit 单位
      */
-    protected void delay(long milliSeconds) {
+    protected void delay(long time, TimeUnit timeUnit) {
         try {
-            TimeUnit.MILLISECONDS.sleep(milliSeconds);
+            timeUnit.sleep(time);
         } catch (InterruptedException e) {
             log.error("fail to delay: {} ---- {}", e.getMessage(), e.getCause());
             Thread.currentThread().interrupt();
