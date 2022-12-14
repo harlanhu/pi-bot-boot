@@ -153,4 +153,16 @@ public class SSD1306 extends AbstractOledDisplayDevice {
             i2c.writeRegister((byte) 0x40, dataBuffer, i * 16, 16);
         }
     }
+
+    @Override
+    protected void refreshDataBuffer(int x, int y, boolean state) {
+        final int pos = x + (y / 8) * width;
+        if (pos >= 0 && pos < maxIndex) {
+            if (state) {
+                this.dataBuffer[pos] |= (1 << (y & 0x07));
+            } else {
+                this.dataBuffer[pos] &= ~(1 << (y & 0x07));
+            }
+        }
+    }
 }

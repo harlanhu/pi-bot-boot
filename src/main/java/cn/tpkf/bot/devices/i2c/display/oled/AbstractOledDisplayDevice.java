@@ -56,17 +56,20 @@ public abstract class AbstractOledDisplayDevice extends AbstractI2cDevice implem
         }
     }
 
+    /**
+     * 刷新数据区
+     *
+     * @param x     x坐标
+     * @param y     y坐标
+     * @param state 状态
+     */
+    protected abstract void refreshDataBuffer(int x, int y, boolean state);
+
+
     public void updateDataBuffer(int x, int y, boolean state) {
         lock.lock();
         try {
-            final int pos = x + (y / 8) * width;
-            if (pos >= 0 && pos < maxIndex) {
-                if (state) {
-                    this.dataBuffer[pos] |= (1 << (y & 0x07));
-                } else {
-                    this.dataBuffer[pos] &= ~(1 << (y & 0x07));
-                }
-            }
+            refreshDataBuffer(x, y, state);
         } finally {
             lock.unlock();
         }
