@@ -4,9 +4,7 @@ import cn.tpkf.bot.devices.i2c.AbstractI2cDevice;
 import cn.tpkf.bot.devices.i2c.display.oled.font.Font;
 import cn.tpkf.bot.devices.i2c.display.oled.font.Rotation;
 import cn.tpkf.bot.enums.AddressEnums;
-import cn.tpkf.bot.utils.GpioConfigUtils;
 import com.pi4j.context.Context;
-import com.pi4j.io.i2c.I2C;
 import lombok.Getter;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
@@ -41,16 +39,6 @@ public abstract class AbstractOledDisplayDevice extends AbstractI2cDevice implem
         this.rotation = rotation;
         this.dataBuffer = new byte[(height * width) / 8];
         this.lock = new ReentrantLock();
-    }
-
-    @Override
-    public int getMaxIndex() {
-        return maxIndex;
-    }
-
-    @Override
-    public Rotation getRotation() {
-        return rotation;
     }
 
     @Override

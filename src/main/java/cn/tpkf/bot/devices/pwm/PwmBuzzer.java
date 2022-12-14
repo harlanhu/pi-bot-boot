@@ -1,13 +1,8 @@
 package cn.tpkf.bot.devices.pwm;
 
 import cn.tpkf.bot.enums.PinEnums;
-import cn.tpkf.bot.utils.GpioConfigUtils;
 import com.pi4j.context.Context;
-import com.pi4j.io.pwm.Pwm;
 import com.pi4j.io.pwm.PwmType;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * PWM 蜂鸣器

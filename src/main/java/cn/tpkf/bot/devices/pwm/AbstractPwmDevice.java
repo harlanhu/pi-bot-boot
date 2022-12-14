@@ -1,11 +1,10 @@
 package cn.tpkf.bot.devices.pwm;
 
 import cn.tpkf.bot.devices.AbstractDelayDevice;
-import cn.tpkf.bot.devices.AbstractDevice;
 import cn.tpkf.bot.enums.PinEnums;
-import cn.tpkf.bot.utils.GpioConfigUtils;
 import com.pi4j.context.Context;
 import com.pi4j.io.pwm.Pwm;
+import com.pi4j.io.pwm.PwmConfig;
 import com.pi4j.io.pwm.PwmType;
 import lombok.Getter;
 
@@ -21,17 +20,24 @@ public abstract class AbstractPwmDevice extends AbstractDelayDevice implements P
 
     protected final Pwm pwm;
 
-    protected final String name;
-
-    protected final Context context;
-
     protected final ReentrantLock lock;
 
     protected AbstractPwmDevice(Context pi4jContext, PinEnums pinEnums, String name, PwmType pwmType, int initial, int shutdown) {
-        this.context = pi4jContext;
-        this.pwm = pi4jContext.create(GpioConfigUtils.buildPwmConfig(pi4jContext, pinEnums, name, pwmType, initial, shutdown));
-        this.name = name;
+        super(pi4jContext, name);
+        this.pwm = pi4jContext.create(buildPwmConfig(pi4jContext, pinEnums, name, pwmType, initial, shutdown));
         this.lock = new ReentrantLock();
+    }
+
+    protected PwmConfig buildPwmConfig(Context pi4j, PinEnums pin, String name, PwmType pwmType, int initial, int shutdown) {
+        return Pwm.newConfigBuilder(pi4j)
+                .id("BCM-" + pin)
+                .name(name)
+                .address(pin.getVale())
+                .pwmType(pwmType)
+                .initial(initial)
+                .shutdown(shutdown)
+                .provider("pigpio-pwm")
+                .build();
     }
 
     public void on(int frequency) {

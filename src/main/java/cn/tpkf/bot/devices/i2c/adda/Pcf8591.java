@@ -2,9 +2,7 @@ package cn.tpkf.bot.devices.i2c.adda;
 
 import cn.tpkf.bot.devices.i2c.AbstractI2cDevice;
 import cn.tpkf.bot.enums.AddressEnums;
-import cn.tpkf.bot.utils.GpioConfigUtils;
 import com.pi4j.context.Context;
-import com.pi4j.io.i2c.I2C;
 import lombok.Getter;
 
 /**

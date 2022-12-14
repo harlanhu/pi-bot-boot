@@ -2,9 +2,7 @@ package cn.tpkf.bot.devices.i2c.display.oled;
 
 import cn.tpkf.bot.devices.i2c.display.oled.font.Rotation;
 import cn.tpkf.bot.enums.AddressEnums;
-import cn.tpkf.bot.utils.GpioConfigUtils;
 import com.pi4j.context.Context;
-import com.pi4j.io.i2c.I2C;
 import lombok.Getter;
 
 /**
@@ -82,7 +80,7 @@ public class SSD1306 extends AbstractOledDisplayDevice {
 
     @Override
     public void setUp() {
-
+        //DO NOTHING
     }
 
     @Override

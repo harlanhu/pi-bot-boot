@@ -2,9 +2,9 @@ package cn.tpkf.bot.devices.digital.output;
 
 import cn.tpkf.bot.devices.AbstractDelayDevice;
 import cn.tpkf.bot.enums.PinEnums;
-import cn.tpkf.bot.utils.GpioConfigUtils;
 import com.pi4j.context.Context;
 import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalOutputConfig;
 import com.pi4j.io.gpio.digital.DigitalState;
 import lombok.Getter;
 
@@ -26,9 +26,20 @@ public abstract class AbstractDoDevice extends AbstractDelayDevice implements Di
 
     protected AbstractDoDevice(Context pi4jContext, PinEnums pin, String name, DigitalState initial, DigitalState shutdown) {
         super(pi4jContext, name);
-        this.digitalOutput = pi4jContext.create(GpioConfigUtils.buildDigitalOutputConfig(pi4jContext, pin, name, initial, shutdown));
+        this.digitalOutput = pi4jContext.create(buildDigitalOutputConfig(pi4jContext, pin, name, initial, shutdown));
         this.pin = pin;
         this.lock = new ReentrantLock();
+    }
+
+    protected DigitalOutputConfig buildDigitalOutputConfig(Context pi4j, PinEnums pin, String name, DigitalState initial, DigitalState shutdown) {
+        return DigitalOutput.newConfigBuilder(pi4j)
+                .id("BCM-" + pin)
+                .name(name)
+                .initial(initial)
+                .shutdown(shutdown)
+                .address(pin.getVale())
+                .provider("pigpio-digital-output")
+                .build();
     }
 
     /**
@@ -39,7 +50,6 @@ public abstract class AbstractDoDevice extends AbstractDelayDevice implements Di
     }
 
     public void on(long duration) {
-        ReentrantLock lock = getLock();
         lock.lock();
         try {
             on();
@@ -54,14 +64,53 @@ public abstract class AbstractDoDevice extends AbstractDelayDevice implements Di
         getDigitalOutput().off();
     }
 
-     public boolean toggle() {
-         getDigitalOutput().toggle();
-         return getDigitalOutput().isOff();
-     }
+    public boolean toggle() {
+        getDigitalOutput().toggle();
+        return getDigitalOutput().isOff();
+    }
 
-     public void setState(boolean state) {
-         getDigitalOutput().setState(state);
-     }
+    public void setState(boolean state) {
+        getDigitalOutput().setState(state);
+    }
+
+    public void loop(long duration, int loop) {
+        if (loop <= 0 || duration <= 0) {
+            return;
+        }
+        lock.lock();
+        try {
+            while (loop >= 1) {
+                on(duration);
+                loop--;
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void loop() {
+        loop(200, 1);
+    }
+
+    public void cycle(long duration, int loop, long interval, int cycle) {
+        if (duration == 0 || loop == 0 || cycle == 0 || interval < 0) {
+            return;
+        }
+        lock.lock();
+        try {
+            while (cycle >= 1) {
+                loop(duration, loop);
+                delay(interval);
+                cycle--;
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void cycle() {
+        cycle(200, 3, 500, 1);
+    }
 
     @Override
     public boolean isLocked() {

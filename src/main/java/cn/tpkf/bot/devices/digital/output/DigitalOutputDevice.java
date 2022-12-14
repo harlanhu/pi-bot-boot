@@ -41,8 +41,38 @@ public interface DigitalOutputDevice extends Device, SingleDevice {
 
     /**
      * 设置电平
+     *
      * @param state true 高电平, false 低电平
      */
     void setState(boolean state);
+
+    /**
+     * 循环开关
+     */
+    void loop();
+
+    /**
+     * 循环开关
+     *
+     * @param duration 开关间隔
+     * @param loop     开关次数
+     */
+    void loop(long duration, int loop);
+
+    /**
+     * 训话开关
+     */
+    void cycle();
+
+    /**
+     * 循环开关
+     *
+     * @param duration 开关间隔
+     * @param loop     开关次数
+     * @param interval 间隔时间
+     * @param cycle    循环次数
+     */
+    void cycle(long duration, int loop, long interval, int cycle);
+
 
 }
