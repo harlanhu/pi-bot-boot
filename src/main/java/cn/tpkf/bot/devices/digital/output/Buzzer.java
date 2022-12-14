@@ -15,24 +15,11 @@ import lombok.Getter;
 public class Buzzer extends AbstractDoDevice {
 
     public Buzzer(Context pi4jContext, PinEnums pin, String name, DigitalState initial, DigitalState shutdown) {
-        super(pi4jContext, pin, name, initial, shutdown);
+        super(pi4jContext, pin, name, initial, shutdown, DigitalState.HIGH, DigitalState.LOW);
     }
 
     public Buzzer(Context pi4jContext, PinEnums pin, String name) {
-        super(pi4jContext, pin, name, DigitalState.HIGH, DigitalState.LOW);
-    }
-
-    public void setState(boolean state) {
-        digitalOutput.setState(state);
-    }
-
-
-    public void on() {
-        digitalOutput.setState(false);
-    }
-
-    public void off() {
-        digitalOutput.setState(true);
+        this(pi4jContext, pin, name, DigitalState.HIGH, DigitalState.LOW);
     }
 
     @Override

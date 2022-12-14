@@ -20,15 +20,30 @@ public abstract class AbstractDoDevice extends AbstractDelayDevice implements Di
 
     protected final DigitalOutput digitalOutput;
 
+    protected final DigitalState onState;
+
+    protected final DigitalState offState;
+
     protected final PinEnums pin;
 
     protected final ReentrantLock lock;
+
+    protected AbstractDoDevice(Context pi4jContext, PinEnums pin, String name, DigitalState onState, DigitalState offState, DigitalState initial, DigitalState shutdown) {
+        super(pi4jContext, name);
+        this.digitalOutput = pi4jContext.create(buildDigitalOutputConfig(pi4jContext, pin, name, initial, shutdown));
+        this.pin = pin;
+        this.onState = onState;
+        this.offState = offState;
+        this.lock = new ReentrantLock();
+    }
 
     protected AbstractDoDevice(Context pi4jContext, PinEnums pin, String name, DigitalState initial, DigitalState shutdown) {
         super(pi4jContext, name);
         this.digitalOutput = pi4jContext.create(buildDigitalOutputConfig(pi4jContext, pin, name, initial, shutdown));
         this.pin = pin;
         this.lock = new ReentrantLock();
+        this.onState = DigitalState.HIGH;
+        this.offState = DigitalState.LOW;
     }
 
     protected DigitalOutputConfig buildDigitalOutputConfig(Context pi4j, PinEnums pin, String name, DigitalState initial, DigitalState shutdown) {
@@ -42,11 +57,13 @@ public abstract class AbstractDoDevice extends AbstractDelayDevice implements Di
                 .build();
     }
 
-    /**
-     * 设置高电平
-     */
+    @Override
+    public DigitalState getState() {
+        return digitalOutput.state();
+    }
+
     public void on() {
-        getDigitalOutput().on();
+        digitalOutput.setState(onState.getValue().intValue());
     }
 
     public void on(long duration) {
@@ -61,7 +78,7 @@ public abstract class AbstractDoDevice extends AbstractDelayDevice implements Di
     }
 
     public void off() {
-        getDigitalOutput().off();
+        digitalOutput.setState(offState.getValue().intValue());
     }
 
     public boolean toggle() {
@@ -69,8 +86,8 @@ public abstract class AbstractDoDevice extends AbstractDelayDevice implements Di
         return getDigitalOutput().isOff();
     }
 
-    public void setState(boolean state) {
-        getDigitalOutput().setState(state);
+    public void setState(DigitalState state) {
+        digitalOutput.setState(state.getValue().intValue());
     }
 
     public void loop(long duration, int loop) {
