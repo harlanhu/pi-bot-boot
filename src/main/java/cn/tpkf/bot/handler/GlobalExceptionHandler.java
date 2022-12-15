@@ -2,6 +2,7 @@ package cn.tpkf.bot.handler;
 
 import cn.tpkf.bot.entity.base.ResultEntity;
 import cn.tpkf.bot.enums.ResultCodeEnums;
+import cn.tpkf.bot.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -39,6 +40,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResultEntity<Object> handleRuntimeException(RuntimeException e) {
         return ResultEntity.fail(ResultCodeEnums.FAIL, e.getMessage());
+    }
+
+    @ExceptionHandler(AppException.class)
+    public ResultEntity<Object> handleAppException(AppException e) {
+        return ResultEntity.fail(e.getCode(), e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -4,7 +4,6 @@ import cn.tpkf.bot.devices.digital.output.Buzzer;
 import cn.tpkf.bot.devices.i2c.adda.Pcf8591;
 import cn.tpkf.bot.devices.i2c.display.oled.SSD1306;
 import cn.tpkf.bot.entity.base.ResultEntity;
-import com.alibaba.fastjson2.JSON;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author Harlan
@@ -30,18 +28,6 @@ public class TestController {
     private final Pcf8591 pcf8591;
 
     private final SSD1306 ssd12832;
-
-    @GetMapping("/on")
-    public ResultEntity<Object> on() {
-        buzzer.on();
-        return ResultEntity.success();
-    }
-
-    @GetMapping("/off")
-    public ResultEntity<Object> off() {
-        buzzer.off();
-        return ResultEntity.success();
-    }
 
     @GetMapping("/buzzer")
     public ResultEntity<Boolean> toggle() {

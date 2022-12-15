@@ -47,6 +47,10 @@ public class ResultEntity<T> {
         return getInstance(resultCode.getCode(), null, message);
     }
 
+    public static <T> ResultEntity<T> fail(String code, String message) {
+        return getInstance(code, null, message);
+    }
+
     public static <T> ResultEntity<T> fail(T data) {
         return getInstance(ResultCodeEnums.FAIL, data);
     }
