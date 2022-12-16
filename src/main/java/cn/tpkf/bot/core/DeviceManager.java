@@ -49,6 +49,10 @@ public class DeviceManager {
             device.setUp();
             log.info("{}: 启动完成...", device.getName());
         }));
-        log.info("所有启动完成...");
+        log.info("所有设备启动完成...");
+    }
+
+    public int getDeviceSize() {
+        return devices.size();
     }
 }
