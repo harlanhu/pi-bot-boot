@@ -6,8 +6,6 @@ import cn.tpkf.bot.devices.i2c.display.DisplayDevice;
 import cn.tpkf.bot.devices.i2c.display.oled.font.Font;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.util.Arrays;
 
 /**
  * @author Harlan
@@ -56,7 +54,7 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
      * @param y 显示坐标 y
      * @param state 状态
      */
-    void drawChar(char c, Font font, int x, int y, boolean state);
+    void drawChar(char c, Font font, int x, int y, boolean state) throws Exception;
 
     /**
      * 显示字符

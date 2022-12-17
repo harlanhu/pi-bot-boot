@@ -2,9 +2,10 @@ package cn.tpkf.bot.controller;
 
 import cn.tpkf.bot.devices.digital.output.Buzzer;
 import cn.tpkf.bot.devices.i2c.adda.Pcf8591;
-import cn.tpkf.bot.devices.i2c.display.oled.SSD1306;
+import cn.tpkf.bot.devices.i2c.display.oled.Oled12864;
 import cn.tpkf.bot.entity.base.ResultEntity;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import java.util.Map;
  * @email isharlan.hu@gmail.com
  * @date 2022 12 09 下午 08:58
  */
+@Slf4j
 @RestController
 @RequestMapping("/test")
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class TestController {
 
     private final Pcf8591 pcf8591;
 
-    private final SSD1306 ssd12832;
+    private final Oled12864 oled12864;
 
     @GetMapping("/buzzer")
     public ResultEntity<Boolean> toggle() {
@@ -44,10 +46,10 @@ public class TestController {
         return ResultEntity.success(mapping);
     }
 
-    @GetMapping("/ssd/{text}")
-    public ResultEntity<Object> ssd(@PathVariable String text) {
-        ssd12832.drawString(text, 2, 2, true);
-        ssd12832.updateDataBuffer();
+    @GetMapping("/oled12864/{text}")
+    public ResultEntity<Object> oled12864(@PathVariable String text) {
+        oled12864.drawString(text, 2, 2, true);
+        oled12864.updateDataBuffer();
         return ResultEntity.success();
     }
 

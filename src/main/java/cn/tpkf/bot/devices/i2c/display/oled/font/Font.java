@@ -1,6 +1,5 @@
 package cn.tpkf.bot.devices.i2c.display.oled.font;
 
-import cn.tpkf.bot.devices.i2c.display.oled.AbstractOledDisplayDevice;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

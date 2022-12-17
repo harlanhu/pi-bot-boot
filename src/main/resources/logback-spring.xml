@@ -48,7 +48,7 @@
 
     <!-- 开发环境输出至控制台 -->
     <springProfile name="dev">
-        <root level="DEBUG">
+        <root level="INFO">
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>

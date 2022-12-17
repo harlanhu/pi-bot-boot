@@ -1,2 +1,8 @@
 server:
   port: 20000
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: pi-bot-boot
