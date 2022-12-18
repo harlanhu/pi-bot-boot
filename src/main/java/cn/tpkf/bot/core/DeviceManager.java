@@ -4,10 +4,9 @@ import cn.tpkf.bot.devices.Device;
 import cn.tpkf.bot.devices.digital.output.Buzzer;
 import cn.tpkf.bot.devices.i2c.adda.Pcf8591;
 import cn.tpkf.bot.devices.i2c.display.oled.Oled12864;
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +17,9 @@ import java.util.concurrent.Executor;
  * @email isharlan.hu@gmali.com
  * @date 2022/12/15
  */
+@Data
 @Slf4j
-@Component
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class DeviceManager {
 
     private final Executor asyncExecutor;
@@ -32,13 +31,6 @@ public class DeviceManager {
     private final Oled12864 oled12864;
 
     private final List<Device> devices = new ArrayList<>();
-
-    @PostConstruct
-    private void postConstruct() {
-        log.info("DeviceManager 正在初始化");
-        setUpDevice();
-        log.info("DeviceManager 初始化完成");
-    }
 
     private void setUpDevice() {
         log.info("正在启动设备...");

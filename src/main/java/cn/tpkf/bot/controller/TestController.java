@@ -1,5 +1,6 @@
 package cn.tpkf.bot.controller;
 
+import cn.tpkf.bot.core.DeviceManager;
 import cn.tpkf.bot.devices.digital.output.Buzzer;
 import cn.tpkf.bot.devices.i2c.adda.Pcf8591;
 import cn.tpkf.bot.devices.i2c.display.oled.Oled12864;
@@ -25,19 +26,17 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TestController {
 
-    private final Buzzer buzzer;
-
-    private final Pcf8591 pcf8591;
-
-    private final Oled12864 oled12864;
+    private final DeviceManager deviceManager;
 
     @GetMapping("/buzzer")
     public ResultEntity<Boolean> toggle() {
+        Buzzer buzzer = deviceManager.getBuzzer();
         return ResultEntity.success(buzzer.toggle());
     }
 
     @GetMapping("/pcf")
     public ResultEntity<Map<String, Double>> pcf() {
+        Pcf8591 pcf8591 = deviceManager.getPcf8591();
         Map<String, Double> mapping = new HashMap<>(4);
         mapping.put("AIN0", pcf8591.readAin0());
         mapping.put("AIN1", pcf8591.readAin1());
@@ -48,6 +47,7 @@ public class TestController {
 
     @GetMapping("/oled12864/{x}/{y}/{text}")
     public ResultEntity<Object> oled12864(@PathVariable Integer x, @PathVariable Integer y, @PathVariable String text) {
+        Oled12864 oled12864 = deviceManager.getOled12864();
         oled12864.clearAndDrawString(text, x, y, true);
         return ResultEntity.success();
     }
