@@ -106,29 +106,17 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
         }
     }
 
-    /**
-     * 刷新数据区
-     *
-     * @param x     x坐标
-     * @param y     y坐标
-     * @param state 状态
-     */
-    protected void refreshDataBuffer(int x, int y, boolean state) {
-        final int pos = x + (y / 8) * width;
-        if (pos >= 0 && pos < maxIndex) {
-            if (state) {
-                dataBuffer[pos] |= (1 << (y & 0x07));
-            } else {
-                dataBuffer[pos] &= ~(1 << (y & 0x07));
-            }
-        }
-    }
-
-
     public void updateDataBuffer(int x, int y, boolean state) {
         lock.lock();
         try {
-            refreshDataBuffer(x, y, state);
+            final int pos = x + (y / 8) * width;
+            if (pos >= 0 && pos < maxIndex) {
+                if (state) {
+                    dataBuffer[pos] |= (1 << (y & 0x07));
+                } else {
+                    dataBuffer[pos] &= ~(1 << (y & 0x07));
+                }
+            }
         } finally {
             lock.unlock();
         }
@@ -222,25 +210,32 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
         drawStringCentered(text, Font.FONT_5X8, y, state);
     }
 
-    public void clear() {
+    @Override
+    public void clearAndDrawString(String text, int x, int y, boolean state) {
+        resetDataBuffer();
+        drawString(text, x, y, state);
+        update();
+    }
+
+    public void resetDataBuffer() {
         Arrays.fill(dataBuffer, (byte) 0x00);
     }
 
-    public void reset() {
-        //before we shut down we clear the display
-        clear();
+    public void resetDraw() {
+        //before we shut down we resetDataBuffer the display
+        resetDataBuffer();
         update();
     }
 
     @Override
     public void update() {
         writeCommand(SSD1306_COLUMN_ADDR);
-        // Column start address (0 = reset)
+        // Column start address (0 = resetDraw)
         writeCommand((byte) 0);
-        // Column end address (127 = reset)
+        // Column end address (127 = resetDraw)
         writeCommand((byte) (width - 1));
         writeCommand(SSD1306_PAGE_ADDR);
-        // Page start address (0 = reset)
+        // Page start address (0 = resetDraw)
         writeCommand((byte) 0);
         // Page end address
         writeCommand((byte) 7);

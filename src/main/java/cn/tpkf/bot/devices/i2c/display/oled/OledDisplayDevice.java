@@ -82,6 +82,15 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
      * @param y 显示坐标 y
      * @param state 状态
      */
+    void clearAndDrawString(String text, int x, int y, boolean state);
+
+    /**
+     * 显示字符串
+     * @param text 字符串
+     * @param x 显示坐标 x
+     * @param y 显示坐标 y
+     * @param state 状态
+     */
     void drawString(String text, int x, int y, boolean state);
 
     /**
@@ -112,11 +121,11 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
     /**
      * 清空数据区
      */
-    void clear();
+    void resetDataBuffer();
 
     /**
      * 重置显示
      */
-    void reset();
+    void resetDraw();
 
 }

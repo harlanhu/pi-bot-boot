@@ -24,8 +24,8 @@ public class Oled12832 extends AbstractSSD1306Device {
 
     public Oled12832(Context pi4jContext, String name, int i2cBus, AddressEnums address, Rotation rotation) {
         super(pi4jContext, i2cBus, address, name, 128, 32, rotation);
-        clear();
-        Runtime.getRuntime().addShutdownHook(new Thread(this::reset));
+        resetDataBuffer();
+        Runtime.getRuntime().addShutdownHook(new Thread(this::resetDraw));
         init();
     }
 
