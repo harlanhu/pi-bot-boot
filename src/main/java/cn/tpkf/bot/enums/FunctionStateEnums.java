@@ -18,14 +18,19 @@ public enum FunctionStateEnums {
     INITIALIZE(0),
 
     /**
+     * 初始设置
+     */
+    SETUP(1),
+
+    /**
      * 运行
      */
-    RUNNING(1),
+    RUNNING(2),
 
     /**
      * 停止
      */
-    STOP(2);
+    STOP(3);
 
     private final Integer value;
 

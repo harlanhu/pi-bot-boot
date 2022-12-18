@@ -1,4 +1,4 @@
-package cn.tpkf.bot.core;
+package cn.tpkf.bot.manager;
 
 import cn.tpkf.bot.devices.Device;
 import cn.tpkf.bot.devices.digital.output.Buzzer;

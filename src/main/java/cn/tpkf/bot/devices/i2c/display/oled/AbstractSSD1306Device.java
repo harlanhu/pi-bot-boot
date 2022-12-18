@@ -230,12 +230,12 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
     @Override
     public void update() {
         writeCommand(SSD1306_COLUMN_ADDR);
-        // Column start address (0 = resetDraw)
+        // Column run address (0 = resetDraw)
         writeCommand((byte) 0);
         // Column end address (127 = resetDraw)
         writeCommand((byte) (width - 1));
         writeCommand(SSD1306_PAGE_ADDR);
-        // Page start address (0 = resetDraw)
+        // Page run address (0 = resetDraw)
         writeCommand((byte) 0);
         // Page end address
         writeCommand((byte) 7);

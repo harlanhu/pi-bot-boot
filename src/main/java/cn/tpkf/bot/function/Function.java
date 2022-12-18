@@ -1,5 +1,7 @@
 package cn.tpkf.bot.function;
 
+import cn.tpkf.bot.enums.FunctionStateEnums;
+
 /**
  * @author Harlan
  * @email isharlan.hu@gmali.com
@@ -15,8 +17,9 @@ public interface Function {
 
     /**
      * 获取当前状态
+     * @return {@link FunctionStateEnums}
      */
-    void getState();
+    FunctionStateEnums getState();
 
     /**
      * 初始化
@@ -26,10 +29,16 @@ public interface Function {
     /**
      * 启动功能
      */
-    void start();
+    void run();
 
     /**
      * 停止功能
      */
     void stop();
+
+    /**
+     * 是否正在运行
+     * @return ture false
+     */
+    boolean isRunning();
 }

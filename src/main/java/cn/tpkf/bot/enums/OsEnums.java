@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * Operational status or single-shot conversion start
+ * Operational status or single-shot conversion run
  * This bit determines the operational status of the device. OS can only be written
  * when in power-down state and has no effect when a conversion is ongoing.
  *
@@ -17,7 +17,7 @@ import lombok.Getter;
 public enum OsEnums {
 
     /**
-     * When writing: start a single conversion (when in power-down state)
+     * When writing: run a single conversion (when in power-down state)
      */
     WRITE_START(0b1000_0000_0000_0000),
 
@@ -43,7 +43,7 @@ public enum OsEnums {
     CLR_CURRENT_CONF_PARAM(0b0111_1111_1111_1111);
 
     /**
-     * Operational status or single-shot conversion start
+     * Operational status or single-shot conversion run
      */
     private final int value;
 

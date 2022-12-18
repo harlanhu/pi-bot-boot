@@ -1,6 +1,6 @@
 package cn.tpkf.bot.config;
 
-import cn.tpkf.bot.core.DeviceManager;
+import cn.tpkf.bot.manager.DeviceManager;
 import cn.tpkf.bot.devices.digital.output.Buzzer;
 import cn.tpkf.bot.devices.i2c.adda.Pcf8591;
 import cn.tpkf.bot.devices.i2c.display.oled.Oled12864;
@@ -17,7 +17,7 @@ import java.util.concurrent.Executor;
  * @date 2022 12 09 下午 10:46
  */
 @Configuration
-public class DeviceInitializer {
+public class DeviceManagerConfig {
 
     @Bean
     public DeviceManager deviceManager(Executor asyncExecutor, Context pi4jContext) {
