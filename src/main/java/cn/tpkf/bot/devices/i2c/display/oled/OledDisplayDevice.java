@@ -22,7 +22,7 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
     /**
      * 刷新数据缓存
      */
-    void updateDataBuffer();
+    void update();
 
     /**
      * 写入指令
@@ -100,6 +100,14 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
      * @param state 状态
      */
     void drawStringCentered(String text, Font font, int y, boolean state);
+
+    /**
+     * 左右居中显示字符串
+     * @param text 字符串
+     * @param y 显示坐标 y
+     * @param state 状态
+     */
+    void drawStringCentered(String text, int y, boolean state);
 
     /**
      * 清空数据区

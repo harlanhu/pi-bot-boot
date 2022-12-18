@@ -47,10 +47,17 @@ public class GlobalExceptionHandler {
         return ResultEntity.fail(e.getCode(), e.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ResultEntity<Object> handleException(Exception e) {
         log.error("全局异常处理: {} ---- {}", e.getLocalizedMessage(), e.getStackTrace());
+        return ResultEntity.fail(ResultCodeEnums.UNKNOWN_ERROR);
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Throwable.class)
+    public ResultEntity<Object> handleThrowable(Throwable throwable) {
+        log.error("全局异常: {} ---- {}", throwable.getLocalizedMessage(), throwable.getMessage());
         return ResultEntity.fail(ResultCodeEnums.UNKNOWN_ERROR);
     }
 }

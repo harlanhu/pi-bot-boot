@@ -352,6 +352,6 @@ public enum Font {
     private final byte[] data;
 
     public byte getData(int offset) {
-        return this.data[offset];
+        return data[offset];
     }
 }

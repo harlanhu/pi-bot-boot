@@ -114,12 +114,12 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
      * @param state 状态
      */
     protected void refreshDataBuffer(int x, int y, boolean state) {
-        final int pos = x + (y / 8) * getDisplayWidth();
+        final int pos = x + (y / 8) * width;
         if (pos >= 0 && pos < maxIndex) {
             if (state) {
-                this.dataBuffer[pos] |= (1 << (y & 0x07));
+                dataBuffer[pos] |= (1 << (y & 0x07));
             } else {
-                this.dataBuffer[pos] &= ~(1 << (y & 0x07));
+                dataBuffer[pos] &= ~(1 << (y & 0x07));
             }
         }
     }
@@ -137,26 +137,12 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
     public void setPixel(int x, int y, boolean state) {
         lock.lock();
         try {
-            int currX, currY;
             switch (rotation) {
-                case DEG_90 -> {
-                    currX = y;
-                    currY = getDisplayWidth() - x - 1;
-                }
-                case DEG_180 -> {
-                    currX = getDisplayWidth() - x - 1;
-                    currY = getDisplayHeight() - y - 1;
-                }
-                case DEG_270 -> {
-                    currX = getDisplayHeight() - y - 1;
-                    currY = x;
-                }
-                default -> {
-                    currX = x;
-                    currY = y;
-                }
+                case DEG_0 -> updateDataBuffer(x, y, state);
+                case DEG_90 -> updateDataBuffer(y, getWidth() - x - 1, state);
+                case DEG_180 -> updateDataBuffer(getWidth() - x - 1, getHeight() - y - 1, state);
+                case DEG_270 -> updateDataBuffer(getHeight() - y - 1, x, state);
             }
-            updateDataBuffer(currX, currY, state);
         } finally {
             lock.unlock();
         }
@@ -178,7 +164,7 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
     protected abstract void customDrawChar(char c, Font font, int x, int y, boolean state);
 
     public void drawChar(char c, int x, int y, boolean state) {
-        Font font = Font.FONT_5X8;
+        Font font = Font.FONT_4X5;
         drawChar(c, font, x, y, state);
     }
 
@@ -192,8 +178,8 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
                     posY += font.getOuterHeight();
                     posX = x;
                 } else {
-                    if (posX >= 0 && posX + font.getWidth() < this.getDisplayWidth()
-                            && posY >= 0 && posY + font.getHeight() < this.getDisplayHeight()) {
+                    if (posX >= 0 && posX + font.getWidth() < getDisplayWidth()
+                            && posY >= 0 && posY + font.getHeight() < getDisplayHeight()) {
                         drawChar(c, font, posX, posY, state);
                     }
                     posX += font.getOuterWidth();
@@ -215,8 +201,8 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
         int index = 0;
         int pixelVal;
         final byte[] pixels = ((DataBufferByte) tmpImage.getRaster().getDataBuffer()).getData();
-        for (int posY = 0; posY < getDisplayHeight(); posY++) {
-            for (int posX = 0; posX < getDisplayWidth() / 8; posX++) {
+        for (int posY = 0; posY < height; posY++) {
+            for (int posX = 0; posX < width / 8; posX++) {
                 for (int bit = 0; bit < 8; bit++) {
                     pixelVal = (byte) ((pixels[index / 8] >> (7 - bit)) & 0x01);
                     setPixel(posX * 8 + bit, posY, pixelVal > 0);
@@ -228,8 +214,12 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
 
     public void drawStringCentered(String text, Font font, int y, boolean state) {
         final int strSizeX = text.length() * font.getOuterWidth();
-        final int x = (width - strSizeX) / 2;
+        final int x = (getDisplayWidth() - strSizeX) / 2;
         drawString(text, font, x, y, state);
+    }
+
+    public void drawStringCentered(String text, int y, boolean state) {
+        drawStringCentered(text, Font.FONT_5X8, y, state);
     }
 
     public void clear() {
@@ -239,44 +229,41 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
     public void reset() {
         //before we shut down we clear the display
         clear();
-        updateDataBuffer();
+        update();
     }
 
     @Override
-    public void updateDataBuffer() {
-        int displayWidth = getDisplayWidth();
-        int displayHeight = getDisplayHeight();
+    public void update() {
         writeCommand(SSD1306_COLUMN_ADDR);
         // Column start address (0 = reset)
         writeCommand((byte) 0);
         // Column end address (127 = reset)
-        writeCommand((byte) (displayWidth - 1));
+        writeCommand((byte) (width - 1));
         writeCommand(SSD1306_PAGE_ADDR);
         // Page start address (0 = reset)
         writeCommand((byte) 0);
         // Page end address
         writeCommand((byte) 7);
-        for (int i = 0; i < ((displayWidth * displayHeight / 8) / 16); i++) {
+        for (int i = 0; i < ((width * height / 8) / 16); i++) {
             // send a bunch of data in one x mission
-            i2c.writeRegister((byte) 0x40, dataBuffer, i * 16, 16);
+            byte[] tmpData = Arrays.copyOfRange(dataBuffer, i * 16, i * 16 + 16);
+            i2c.writeRegister((byte) 0x40, tmpData);
         }
     }
 
     @Override
     public int getDisplayHeight() {
-        if (rotation == Rotation.DEG_270) {
-            return width;
-        } else {
-            return height;
-        }
+        return switch (rotation) {
+            case DEG_90, DEG_270 -> width;
+            case DEG_0, DEG_180 -> height;
+        };
     }
 
     @Override
     public int getDisplayWidth() {
-        if (rotation == Rotation.DEG_270) {
-            return height;
-        } else {
-            return width;
-        }
+        return switch (rotation) {
+            case DEG_90, DEG_270 -> height;
+            case DEG_0, DEG_180 -> width;
+        };
     }
 }

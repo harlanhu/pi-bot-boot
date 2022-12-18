@@ -46,10 +46,10 @@ public class TestController {
         return ResultEntity.success(mapping);
     }
 
-    @GetMapping("/oled12864/{text}")
-    public ResultEntity<Object> oled12864(@PathVariable String text) {
-        oled12864.drawString(text, 2, 2, true);
-        oled12864.updateDataBuffer();
+    @GetMapping("/oled12864/{x}/{y}/{text}")
+    public ResultEntity<Object> oled12864(@PathVariable Integer x, @PathVariable Integer y, @PathVariable String text) {
+        oled12864.drawString(text, x, y, true);
+        oled12864.update();
         return ResultEntity.success();
     }
 
