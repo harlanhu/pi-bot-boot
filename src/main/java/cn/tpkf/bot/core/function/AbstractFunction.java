@@ -75,6 +75,7 @@ public abstract class AbstractFunction implements Function{
                         condition.await();
                     } catch (InterruptedException e) {
                         log.error("{}功能运行错误: {} ---- {}", name, e.getMessage(), e.getCause());
+                        Thread.currentThread().interrupt();
                     }
                 }
                 doRun();
