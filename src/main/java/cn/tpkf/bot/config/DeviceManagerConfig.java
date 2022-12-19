@@ -1,9 +1,9 @@
 package cn.tpkf.bot.config;
 
-import cn.tpkf.bot.manager.DeviceManager;
-import cn.tpkf.bot.devices.digital.output.Buzzer;
-import cn.tpkf.bot.devices.i2c.adda.Pcf8591;
-import cn.tpkf.bot.devices.i2c.display.oled.Oled12864;
+import cn.tpkf.bot.core.manager.DeviceManager;
+import cn.tpkf.bot.core.devices.digital.output.Buzzer;
+import cn.tpkf.bot.core.devices.i2c.adda.Pcf8591;
+import cn.tpkf.bot.core.devices.i2c.display.oled.Oled12864;
 import cn.tpkf.bot.enums.PinEnums;
 import com.pi4j.context.Context;
 import org.springframework.context.annotation.Bean;

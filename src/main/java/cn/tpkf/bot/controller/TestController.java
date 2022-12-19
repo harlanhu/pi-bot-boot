@@ -1,9 +1,9 @@
 package cn.tpkf.bot.controller;
 
-import cn.tpkf.bot.manager.DeviceManager;
-import cn.tpkf.bot.devices.digital.output.Buzzer;
-import cn.tpkf.bot.devices.i2c.adda.Pcf8591;
-import cn.tpkf.bot.devices.i2c.display.oled.Oled12864;
+import cn.tpkf.bot.core.manager.DeviceManager;
+import cn.tpkf.bot.core.devices.digital.output.Buzzer;
+import cn.tpkf.bot.core.devices.i2c.adda.Pcf8591;
+import cn.tpkf.bot.core.devices.i2c.display.oled.Oled12864;
 import cn.tpkf.bot.entity.base.ResultEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
