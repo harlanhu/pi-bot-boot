@@ -30,7 +30,12 @@ public enum FunctionStateEnums {
     /**
      * 停止
      */
-    STOP(3);
+    STOP(3),
+
+    /**
+     * 销毁
+     */
+    DESTROY(4);
 
     private final Integer value;
 

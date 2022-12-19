@@ -7,7 +7,7 @@ import cn.tpkf.bot.enums.FunctionStateEnums;
  * @email isharlan.hu@gmali.com
  * @date 2022/12/14
  */
-public interface Function extends Runnable {
+public interface Function {
 
     /**
      * 获取功能名称
@@ -30,6 +30,11 @@ public interface Function extends Runnable {
      * 启动功能
      */
     void run();
+
+    /**
+     * 重新开始
+     */
+    void reRun();
 
     /**
      * 停止功能

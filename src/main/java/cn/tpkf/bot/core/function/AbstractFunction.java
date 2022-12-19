@@ -3,6 +3,7 @@ package cn.tpkf.bot.core.function;
 import cn.tpkf.bot.core.manager.DeviceManager;
 import cn.tpkf.bot.enums.FunctionStateEnums;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.locks.Condition;
@@ -57,14 +58,20 @@ public abstract class AbstractFunction implements Function{
         state = FunctionStateEnums.SETUP;
     }
 
+    @SneakyThrows
     @Override
     public void run() {
         if (state == FunctionStateEnums.RUNNING) {
             log.warn("{} Function is running!", name);
             return;
         }
-        doRun();
         state = FunctionStateEnums.RUNNING;
+        while (true) {
+            if (state == FunctionStateEnums.STOP) {
+                condition.await();
+            }
+            doRun();
+        }
     }
 
     @Override
@@ -74,6 +81,14 @@ public abstract class AbstractFunction implements Function{
         }
         doStop();
         state = FunctionStateEnums.STOP;
+    }
+
+    @Override
+    public void reRun() {
+        if (state == FunctionStateEnums.STOP) {
+            log.warn("{} Function is not stop!", name);
+        }
+        condition.signal();
     }
 
     @Override
