@@ -5,6 +5,9 @@ import cn.tpkf.bot.enums.FunctionStateEnums;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * @author Harlan
  * @email isharlan.hu@gmail.com
@@ -17,6 +20,10 @@ public abstract class AbstractFunction implements Function {
     protected final String name;
 
     protected FunctionStateEnums state;
+
+    protected final ReentrantLock lock = new ReentrantLock();
+
+    protected final Condition condition = lock.newCondition();
 
     protected final DeviceManager deviceManager;
 
