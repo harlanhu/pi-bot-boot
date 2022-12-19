@@ -20,16 +20,16 @@ public class DisplayFunction extends AbstractFunction {
 
     @Override
     protected void doSetUp() {
+        //DO NOTHING
+    }
+
+    @Override
+    protected void doRun() {
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String dayOfWeek = LocalDate.now().getDayOfWeek().name();
         String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
         deviceManager.getOled12864().clearAndDrawString(date + " " + dayOfWeek, 0, 0, true);
         deviceManager.getOled12864().clearAndDrawString(time, 0, 30, true);
-    }
-
-    @Override
-    protected void doRun() {
-
     }
 
     @Override
