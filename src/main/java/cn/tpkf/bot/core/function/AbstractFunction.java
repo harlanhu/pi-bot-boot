@@ -88,6 +88,7 @@ public abstract class AbstractFunction implements Function{
         if (state == FunctionStateEnums.STOP) {
             log.warn("{} Function is not stop!", name);
         }
+        state = FunctionStateEnums.RUNNING;
         condition.signal();
     }
 
