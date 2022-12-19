@@ -7,7 +7,7 @@ import cn.tpkf.bot.enums.FunctionStateEnums;
  * @email isharlan.hu@gmali.com
  * @date 2022/12/14
  */
-public interface Function {
+public interface Function extends Runnable {
 
     /**
      * 获取功能名称

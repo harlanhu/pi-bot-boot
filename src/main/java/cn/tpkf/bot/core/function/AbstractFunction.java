@@ -15,7 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @Slf4j
 @Getter
-public abstract class AbstractFunction implements Function {
+public abstract class AbstractFunction implements Function{
 
     protected final String name;
 
