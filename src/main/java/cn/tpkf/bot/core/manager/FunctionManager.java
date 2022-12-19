@@ -28,6 +28,8 @@ public class FunctionManager {
     }
 
     public Function remove(String name) {
-        return functionMapping.remove(name);
+        Function function = functionMapping.remove(name);
+        function.stop();
+        return function;
     }
 }

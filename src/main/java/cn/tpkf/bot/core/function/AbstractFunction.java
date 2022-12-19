@@ -1,5 +1,6 @@
 package cn.tpkf.bot.core.function;
 
+import cn.tpkf.bot.core.manager.DeviceManager;
 import cn.tpkf.bot.enums.FunctionStateEnums;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -13,19 +14,30 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 public abstract class AbstractFunction implements Function {
 
-    private final String name;
+    protected final String name;
 
-    private FunctionStateEnums state;
+    protected FunctionStateEnums state;
 
-    protected AbstractFunction(String name) {
+    protected final DeviceManager deviceManager;
+
+    protected AbstractFunction(String name, DeviceManager deviceManager) {
         this.name = name;
-        state = FunctionStateEnums.INITIALIZE;
+        this.deviceManager = deviceManager;
     }
 
+    /**
+     * 初始化
+     */
     protected abstract void doSetUp();
 
-    protected abstract void doStart();
+    /**
+     * 运行
+     */
+    protected abstract void doRun();
 
+    /**
+     * 停止
+     */
     protected abstract void doStop();
 
     @Override
@@ -44,7 +56,7 @@ public abstract class AbstractFunction implements Function {
             log.warn("{} Function is running!", name);
             return;
         }
-        doStart();
+        doRun();
         state = FunctionStateEnums.RUNNING;
     }
 
