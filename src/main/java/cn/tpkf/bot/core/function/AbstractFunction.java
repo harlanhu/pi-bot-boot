@@ -87,6 +87,7 @@ public abstract class AbstractFunction implements Function{
     public void stop() {
         if (state != FunctionStateEnums.RUNNING) {
             log.warn("{} Function is not running!", name);
+            return;
         }
         doStop();
         state = FunctionStateEnums.STOP;
@@ -96,6 +97,7 @@ public abstract class AbstractFunction implements Function{
     public void reRun() {
         if (state == FunctionStateEnums.STOP) {
             log.warn("{} Function is not stop!", name);
+            return;
         }
         state = FunctionStateEnums.RUNNING;
         condition.signal();
