@@ -3,9 +3,9 @@ package cn.tpkf.bot.core.function;
 import cn.tpkf.bot.core.manager.DeviceManager;
 import cn.tpkf.bot.enums.FunctionStateEnums;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -28,9 +28,12 @@ public abstract class AbstractFunction implements Function{
 
     protected final DeviceManager deviceManager;
 
-    protected AbstractFunction(String name, DeviceManager deviceManager) {
+    protected final Executor asyncExecutor;
+
+    protected AbstractFunction(String name, DeviceManager deviceManager, Executor asyncExecutor) {
         this.name = name;
         this.deviceManager = deviceManager;
+        this.asyncExecutor = asyncExecutor;
     }
 
     /**
@@ -58,7 +61,6 @@ public abstract class AbstractFunction implements Function{
         state = FunctionStateEnums.SETUP;
     }
 
-    @SneakyThrows
     @Override
     public void run() {
         if (state == FunctionStateEnums.RUNNING) {
@@ -66,12 +68,18 @@ public abstract class AbstractFunction implements Function{
             return;
         }
         state = FunctionStateEnums.RUNNING;
-        while (true) {
-            if (state == FunctionStateEnums.STOP) {
-                condition.await();
+        asyncExecutor.execute(() -> {
+            while (true) {
+                if (state == FunctionStateEnums.STOP) {
+                    try {
+                        condition.await();
+                    } catch (InterruptedException e) {
+                        log.error("{}功能运行错误: {} ---- {}", name, e.getMessage(), e.getCause());
+                    }
+                }
+                doRun();
             }
-            doRun();
-        }
+        });
     }
 
     @Override

@@ -5,6 +5,7 @@ import cn.tpkf.bot.core.manager.DeviceManager;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.Executor;
 
 /**
  * @author Harlan
@@ -13,8 +14,8 @@ import java.time.format.DateTimeFormatter;
  */
 public class DisplayFunction extends AbstractFunction {
 
-    public DisplayFunction(String name, DeviceManager deviceManager) {
-        super(name, deviceManager);
+    public DisplayFunction(String name, DeviceManager deviceManager, Executor asyncExecutor) {
+        super(name, deviceManager, asyncExecutor);
     }
 
     @Override
