@@ -57,6 +57,7 @@ public abstract class AbstractFunction implements Function {
         if (Objects.nonNull(setUpCommend)) {
             setUpCommend.execute();
         }
+        currentCommendIndex.set(0);
         state = FunctionStateEnums.SETUP;
     }
 
