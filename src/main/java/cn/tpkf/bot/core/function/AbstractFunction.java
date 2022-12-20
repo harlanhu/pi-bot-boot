@@ -34,6 +34,7 @@ public abstract class AbstractFunction implements Function{
         this.name = name;
         this.deviceManager = deviceManager;
         this.asyncExecutor = asyncExecutor;
+        setUp();
     }
 
     /**

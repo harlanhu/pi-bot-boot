@@ -28,8 +28,10 @@ public class DisplayFunction extends AbstractFunction {
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String dayOfWeek = LocalDate.now().getDayOfWeek().name();
         String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-        deviceManager.getOled12864().clearAndDrawString(date + " " + dayOfWeek, 0, 0, true);
-        deviceManager.getOled12864().clearAndDrawString(time, 0, 30, true);
+        deviceManager.getOled12864().resetDataBuffer();
+        deviceManager.getOled12864().drawString(date + " " + dayOfWeek, 0, 0, true);
+        deviceManager.getOled12864().drawString(time, 0, 30, true);
+        deviceManager.getOled12864().update();
     }
 
     @Override
