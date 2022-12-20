@@ -6,6 +6,8 @@ import cn.tpkf.bot.enums.FunctionStateEnums;
 import java.util.List;
 
 /**
+ * 一个功能由最少1个指令{@link Commend}组成
+ * 执行时按指令排列顺序依次执行
  * @author Harlan
  * @email isharlan.hu@gmali.com
  * @date 2022/12/14
@@ -60,6 +62,12 @@ public interface Function {
      * @return 下一条指令
      */
     Commend executeNextCommend();
+
+    /**
+     * 获取指令数量
+     * @return 指令数量
+     */
+    int getCommendsSize();
 
     /**
      * 初始化

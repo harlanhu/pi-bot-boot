@@ -105,4 +105,9 @@ public abstract class AbstractFunction implements Function {
         currentCommendIndex.incrementAndGet();
         return commend;
     }
+
+    @Override
+    public int getCommendsSize() {
+        return commends.size();
+    }
 }
