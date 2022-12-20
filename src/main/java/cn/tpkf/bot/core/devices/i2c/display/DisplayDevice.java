@@ -52,4 +52,9 @@ public interface DisplayDevice extends SingleDevice {
      * @return 实际宽度
      */
     int getHeight();
+
+    /**
+     * 清空屏幕
+     */
+    void clearDisplay();
 }

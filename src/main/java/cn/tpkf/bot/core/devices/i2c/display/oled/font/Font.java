@@ -337,18 +337,39 @@ public enum Font {
             (byte) 0x10, (byte) 0x10, (byte) 0x10, (byte) 0x00,
     });
 
+    /**
+     * 最小字符
+     */
     private final int minChar;
 
+    /**
+     * 最大字符
+     */
     private final int maxChar;
 
+    /**
+     * 宽度
+     */
     private final int width;
 
+    /**
+     * 高度
+     */
     private final int height;
 
+    /**
+     * 外宽
+     */
     private final int outerWidth;
 
+    /**
+     * 外高
+     */
     private final int outerHeight;
 
+    /**
+     * 数据
+     */
     private final byte[] data;
 
     public byte getData(int offset) {

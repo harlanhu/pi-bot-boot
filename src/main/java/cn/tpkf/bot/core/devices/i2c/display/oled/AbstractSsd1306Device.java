@@ -17,7 +17,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @date 2022 12 11 下午 12:30
  */
 @Getter
-public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements OledDisplayDevice {
+public abstract class AbstractSsd1306Device extends AbstractI2cDevice implements OledDisplayDevice {
 
     protected final int width;
 
@@ -81,7 +81,7 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
 
     protected static final byte SSD1306_SWITCH_CAP_VCC = (byte) 0x2;
 
-    protected AbstractSSD1306Device(Context pi4jContext, int i2cBus, AddressEnums address, String name, int width, int height, Rotation rotation) {
+    protected AbstractSsd1306Device(Context pi4jContext, int i2cBus, AddressEnums address, String name, int width, int height, Rotation rotation) {
         super(pi4jContext, name, i2cBus, address);
         this.width = width;
         this.height = height;
@@ -90,6 +90,16 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
         this.dataBuffer = new byte[(height * width) / 8];
         this.lock = new ReentrantLock();
     }
+
+    /**
+     * 自定义显示
+     * @param c 字符
+     * @param font 字体
+     * @param x x 坐标
+     * @param y y 坐标
+     * @param state 状态
+     */
+    protected abstract void customDrawChar(char c, Font font, int x, int y, boolean state);
 
     @Override
     public boolean isLocked() {
@@ -106,7 +116,8 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
         }
     }
 
-    public void updateDataBuffer(int x, int y, boolean state) {
+    @Override
+    public void setDataBuffer(int x, int y, boolean state) {
         lock.lock();
         try {
             final int pos = x + (y / 8) * width;
@@ -122,21 +133,23 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
         }
     }
 
+    @Override
     public void setPixel(int x, int y, boolean state) {
         lock.lock();
         try {
             switch (rotation) {
-                case DEG_0 -> updateDataBuffer(x, y, state);
-                case DEG_90 -> updateDataBuffer(y, getWidth() - x - 1, state);
-                case DEG_180 -> updateDataBuffer(getWidth() - x - 1, getHeight() - y - 1, state);
-                case DEG_270 -> updateDataBuffer(getHeight() - y - 1, x, state);
+                case DEG_0 -> setDataBuffer(x, y, state);
+                case DEG_90 -> setDataBuffer(y, getWidth() - x - 1, state);
+                case DEG_180 -> setDataBuffer(getWidth() - x - 1, getHeight() - y - 1, state);
+                case DEG_270 -> setDataBuffer(getHeight() - y - 1, x, state);
             }
         } finally {
             lock.unlock();
         }
     }
 
-    public void drawChar(char c, Font font, int x, int y, boolean state) {
+    @Override
+    public void setCharPixel(char c, Font font, int x, int y, boolean state) {
         lock.lock();
         try {
             if (c > font.getMaxChar() || c < font.getMinChar()) {
@@ -149,14 +162,13 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
         }
     }
 
-    protected abstract void customDrawChar(char c, Font font, int x, int y, boolean state);
-
-    public void drawChar(char c, int x, int y, boolean state) {
-        Font font = Font.FONT_4X5;
-        drawChar(c, font, x, y, state);
+    @Override
+    public void setCharPixel(char c, int x, int y, boolean state) {
+        setCharPixel(c,  Font.FONT_4X5, x, y, state);
     }
 
-    public void drawString(String text, Font font, int x, int y, boolean state) {
+    @Override
+    public void setStrPixel(String text, Font font, int x, int y, boolean state) {
         lock.lock();
         try {
             int posX = x;
@@ -168,7 +180,7 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
                 } else {
                     if (posX >= 0 && posX + font.getWidth() < getDisplayWidth()
                             && posY >= 0 && posY + font.getHeight() < getDisplayHeight()) {
-                        drawChar(c, font, posX, posY, state);
+                        setCharPixel(c, font, posX, posY, state);
                     }
                     posX += font.getOuterWidth();
                 }
@@ -178,12 +190,86 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
         }
     }
 
-    public void drawString(String text, int x, int y, boolean state) {
-        Font font = Font.FONT_5X8;
-        drawString(text, font, x, y, state);
+    @Override
+    public void setStrPixel(String text, int x, int y, boolean state) {
+        setStrPixel(text, Font.FONT_5X8, x, y, state);
     }
 
-    public void drawImage(BufferedImage image, int x, int y) {
+    @Override
+    public void displayChar(char c, Font font, int x, int y, boolean state) {
+        resetDataBuffer();
+        appendDisplayChar(c, font, x, y, state);
+    }
+
+    @Override
+    public void displayChar(char c, int x, int y, boolean state) {
+        resetDataBuffer();
+        appendDisplayChar(c, x, y, state);
+    }
+
+    @Override
+    public void appendDisplayChar(char c, int x, int y, boolean state) {
+        setCharPixel(c, x, y, state);
+        display();
+    }
+
+    @Override
+    public void appendDisplayChar(char c, Font font, int x, int y, boolean state) {
+        setCharPixel(c, font, x, y, state);
+        display();
+    }
+
+    @Override
+    public void displayStr(String text, Font font, int x, int y, boolean state) {
+        resetDataBuffer();
+        appendDisplayStr(text, font, x, y, state);
+    }
+
+    @Override
+    public void displayStr(String text, int x, int y, boolean state) {
+        resetDataBuffer();
+        appendDisplayStr(text, x, y, state);
+    }
+
+    @Override
+    public void appendDisplayStr(String text, Font font, int x, int y, boolean state) {
+        setStrPixel(text, font, x, y, state);
+        display();
+    }
+
+    @Override
+    public void appendDisplayStr(String text, int x, int y, boolean state) {
+        setStrPixel(text, x, y, state);
+        display();
+    }
+
+    @Override
+    public void displayStrCentered(String text, Font font, int y, boolean state) {
+        resetDataBuffer();
+        appendDisplayStrCentered(text, font, y, state);
+    }
+
+    @Override
+    public void displayStrCentered(String text, int y, boolean state) {
+        resetDataBuffer();
+        appendDisplayStrCentered(text, y, state);
+    }
+
+    @Override
+    public void appendDisplayStrCentered(String text, Font font, int y, boolean state) {
+        final int strSizeX = text.length() * font.getOuterWidth();
+        final int x = (getDisplayWidth() - strSizeX) / 2;
+        setStrPixel(text, font, x, y, state);
+    }
+
+    @Override
+    public void appendDisplayStrCentered(String text, int y, boolean state) {
+        appendDisplayStrCentered(text, Font.FONT_5X8, y, state);
+    }
+
+    @Override
+    public void displayImage(BufferedImage image, int x, int y) {
+        resetDataBuffer();
         BufferedImage tmpImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
         tmpImage.getGraphics().drawImage(image, x, y, null);
         int index = 0;
@@ -198,37 +284,16 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
                 }
             }
         }
+        display();
     }
 
-    public void drawStringCentered(String text, Font font, int y, boolean state) {
-        final int strSizeX = text.length() * font.getOuterWidth();
-        final int x = (getDisplayWidth() - strSizeX) / 2;
-        drawString(text, font, x, y, state);
-    }
-
-    public void drawStringCentered(String text, int y, boolean state) {
-        drawStringCentered(text, Font.FONT_5X8, y, state);
-    }
-
-    @Override
-    public void clearAndDrawString(String text, int x, int y, boolean state) {
-        resetDataBuffer();
-        drawString(text, x, y, state);
-        update();
-    }
 
     public void resetDataBuffer() {
         Arrays.fill(dataBuffer, (byte) 0x00);
     }
 
-    public void resetDraw() {
-        //before we shut down we resetDataBuffer the display
-        resetDataBuffer();
-        update();
-    }
-
     @Override
-    public void update() {
+    public void display() {
         writeCommand(SSD1306_COLUMN_ADDR);
         // Column run address (0 = resetDraw)
         writeCommand((byte) 0);
@@ -260,5 +325,11 @@ public abstract class AbstractSSD1306Device extends AbstractI2cDevice implements
             case DEG_90, DEG_270 -> height;
             case DEG_0, DEG_180 -> width;
         };
+    }
+
+    @Override
+    public void clearDisplay() {
+        resetDataBuffer();
+        display();
     }
 }

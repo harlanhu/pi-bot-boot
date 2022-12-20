@@ -20,9 +20,9 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
     void init();
 
     /**
-     * 刷新数据缓存
+     * 显示数据区内容
      */
-    void update();
+    void display();
 
     /**
      * 写入指令
@@ -31,12 +31,12 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
     void writeCommand(byte command);
 
     /**
-     * 更新数据区
+     * 设置数据区
      * @param x x坐标
      * @param y y坐标
      * @param state 状态
      */
-    void updateDataBuffer(int x, int y, boolean state);
+    void setDataBuffer(int x, int y, boolean state);
 
     /**
      * 设置像素点状态
@@ -47,6 +47,44 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
     void setPixel(int x, int y, boolean state);
 
     /**
+     * 设置字符像素
+     * @param c 字符
+     * @param font 字体
+     * @param x 显示坐标 x
+     * @param y 显示坐标 y
+     * @param state 状态
+     */
+    void setCharPixel(char c, Font font, int x, int y, boolean state);
+
+    /**
+     * 设置字符像素
+     * @param c 字符
+     * @param x 显示坐标 x
+     * @param y 显示坐标 y
+     * @param state 状态
+     */
+    void setCharPixel(char c, int x, int y, boolean state);
+
+    /**
+     * 设置字符串像素
+     * @param text 字符串
+     * @param x 显示坐标 x
+     * @param y 显示坐标 y
+     * @param state 状态
+     */
+    void setStrPixel(String text, int x, int y, boolean state);
+
+    /**
+     * 添加设置字符串像素
+     * @param text 字符串
+     * @param font 字体
+     * @param x 显示坐标 x
+     * @param y 显示坐标 y
+     * @param state 状态
+     */
+    void setStrPixel(String text, Font font, int x, int y, boolean state);
+
+    /**
      * 显示字符
      * @param c 字符
      * @param font 字体
@@ -54,7 +92,7 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
      * @param y 显示坐标 y
      * @param state 状态
      */
-    void drawChar(char c, Font font, int x, int y, boolean state) throws Exception;
+    void displayChar(char c, Font font, int x, int y, boolean state);
 
     /**
      * 显示字符
@@ -63,7 +101,26 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
      * @param y 显示坐标 y
      * @param state 状态
      */
-    void drawChar(char c, int x, int y, boolean state);
+    void displayChar(char c, int x, int y, boolean state);
+
+    /**
+     * 添加显示字符
+     * @param c 字符
+     * @param font 字体
+     * @param x 显示坐标 x
+     * @param y 显示坐标 y
+     * @param state 状态
+     */
+    void appendDisplayChar(char c, Font font, int x, int y, boolean state);
+
+    /**
+     * 添加显示字符
+     * @param c 字符
+     * @param x 显示坐标 x
+     * @param y 显示坐标 y
+     * @param state 状态
+     */
+    void appendDisplayChar(char c, int x, int y, boolean state);
 
     /**
      * 显示字符串
@@ -73,7 +130,7 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
      * @param y 显示坐标 y
      * @param state 状态
      */
-    void drawString(String text, Font font, int x, int y, boolean state);
+    void displayStr(String text, Font font, int x, int y, boolean state);
 
     /**
      * 显示字符串
@@ -82,16 +139,62 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
      * @param y 显示坐标 y
      * @param state 状态
      */
-    void clearAndDrawString(String text, int x, int y, boolean state);
+    void displayStr(String text, int x, int y, boolean state);
 
     /**
-     * 显示字符串
+     * 添加显示字符串
+     * @param text 字符串
+     * @param font 字体
+     * @param x 显示坐标 x
+     * @param y 显示坐标 y
+     * @param state 状态
+     */
+    void appendDisplayStr(String text, Font font, int x, int y, boolean state);
+
+    /**
+     * 添加显示字符串
      * @param text 字符串
      * @param x 显示坐标 x
      * @param y 显示坐标 y
      * @param state 状态
      */
-    void drawString(String text, int x, int y, boolean state);
+    void appendDisplayStr(String text, int x, int y, boolean state);
+
+
+
+    /**
+     * 左右居中显示字符串
+     * @param text 字符串
+     * @param y 显示坐标 y
+     * @param state 状态
+     */
+    void displayStrCentered(String text, int y, boolean state);
+
+    /**
+     * 左右居中显示字符串
+     * @param text 字符串
+     * @param font 字体
+     * @param y 显示坐标 y
+     * @param state 状态
+     */
+    void displayStrCentered(String text, Font font, int y, boolean state);
+
+    /**
+     * 添加左右居中显示字符串
+     * @param text 字符串
+     * @param font 字体
+     * @param y 显示坐标 y
+     * @param state 状态
+     */
+    void appendDisplayStrCentered(String text, Font font, int y, boolean state);
+
+    /**
+     * 左右居中显示字符串
+     * @param text 字符串
+     * @param y 显示坐标 y
+     * @param state 状态
+     */
+    void appendDisplayStrCentered(String text, int y, boolean state);
 
     /**
      * 显示图片
@@ -99,33 +202,11 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
      * @param x 显示坐标 x
      * @param y 显示坐标 y
      */
-    void drawImage(BufferedImage image, int x, int y);
+    void displayImage(BufferedImage image, int x, int y);
 
     /**
-     * 左右居中显示字符串
-     * @param text 字符串
-     * @param font 字体
-     * @param y 显示坐标 y
-     * @param state 状态
-     */
-    void drawStringCentered(String text, Font font, int y, boolean state);
-
-    /**
-     * 左右居中显示字符串
-     * @param text 字符串
-     * @param y 显示坐标 y
-     * @param state 状态
-     */
-    void drawStringCentered(String text, int y, boolean state);
-
-    /**
-     * 清空数据区
+     * 重置数据区
      */
     void resetDataBuffer();
-
-    /**
-     * 重置显示
-     */
-    void resetDraw();
 
 }

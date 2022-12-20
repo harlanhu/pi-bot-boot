@@ -48,7 +48,7 @@ public class TestController {
     @GetMapping("/oled12864/{x}/{y}/{text}")
     public ResultEntity<Object> oled12864(@PathVariable Integer x, @PathVariable Integer y, @PathVariable String text) {
         Oled12864 oled12864 = deviceManager.getOled12864();
-        oled12864.clearAndDrawString(text, x, y, true);
+        oled12864.displayStr(text, x, y, true);
         return ResultEntity.success();
     }
 

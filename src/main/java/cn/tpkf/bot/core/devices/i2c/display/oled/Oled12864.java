@@ -10,7 +10,7 @@ import com.pi4j.context.Context;
  * @email isharlan.hu@gmail.com
  * @date 2022 12 17 上午 11:23
  */
-public class Oled12864 extends AbstractSSD1306Device {
+public class Oled12864 extends AbstractSsd1306Device {
 
     public Oled12864(Context pi4jContext, String name) {
         this(pi4jContext, 1, AddressEnums.OLED, name, Rotation.DEG_0);
@@ -23,7 +23,7 @@ public class Oled12864 extends AbstractSSD1306Device {
     public Oled12864(Context pi4jContext, int i2cBus, AddressEnums address, String name, Rotation rotation) {
         super(pi4jContext, i2cBus, address, name, 128, 64, rotation);
         resetDataBuffer();
-        Runtime.getRuntime().addShutdownHook(new Thread(this::resetDraw));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::clearDisplay));
         init();
     }
 

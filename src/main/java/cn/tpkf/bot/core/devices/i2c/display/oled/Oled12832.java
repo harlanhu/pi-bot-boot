@@ -12,7 +12,7 @@ import lombok.Getter;
  * @date 2022 12 10 下午 11:10
  */
 @Getter
-public class Oled12832 extends AbstractSSD1306Device {
+public class Oled12832 extends AbstractSsd1306Device {
 
     public Oled12832(Context pi4jContext, String name) {
         this(pi4jContext, name, 1, AddressEnums.OLED, Rotation.DEG_0);
@@ -25,7 +25,7 @@ public class Oled12832 extends AbstractSSD1306Device {
     public Oled12832(Context pi4jContext, String name, int i2cBus, AddressEnums address, Rotation rotation) {
         super(pi4jContext, i2cBus, address, name, 128, 32, rotation);
         resetDataBuffer();
-        Runtime.getRuntime().addShutdownHook(new Thread(this::resetDraw));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::clearDisplay));
         init();
     }
 
