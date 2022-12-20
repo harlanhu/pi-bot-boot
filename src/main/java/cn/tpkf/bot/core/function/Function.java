@@ -50,6 +50,18 @@ public interface Function {
     Commend getCommend(int index);
 
     /**
+     * 获取下一条指令
+     * @return 下一条指令
+     */
+    Commend getNextCommend();
+
+    /**
+     * 执行下一条指令并计数
+     * @return 下一条指令
+     */
+    Commend executeNextCommend();
+
+    /**
      * 初始化
      */
     void setUp();

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Harlan
@@ -29,7 +30,7 @@ public abstract class AbstractFunction implements Function {
 
     protected FunctionStateEnums state;
 
-    protected Integer currentCommendIndex = 0;
+    protected AtomicInteger currentCommendIndex = new AtomicInteger(0);
 
     protected AbstractFunction(String name, Commend setUpCommend, Commend stopCommend, List<Commend> commends) {
         this.name = name;
@@ -77,12 +78,30 @@ public abstract class AbstractFunction implements Function {
     }
 
     @Override
+    public Integer getCurrentCommendIndex() {
+        return currentCommendIndex.get();
+    }
+
+    @Override
     public Commend getCommend(int index) {
         return commends.get(index);
     }
 
     @Override
     public Commend getCuurentCommend() {
-        return commends.get(currentCommendIndex);
+        return commends.get(currentCommendIndex.get());
+    }
+
+    @Override
+    public Commend getNextCommend() {
+        return commends.get(currentCommendIndex.get());
+    }
+
+    @Override
+    public Commend executeNextCommend() {
+        Commend commend = commends.get(currentCommendIndex.get());
+        commend.execute();
+        currentCommendIndex.incrementAndGet();
+        return commend;
     }
 }
