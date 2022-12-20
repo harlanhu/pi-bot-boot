@@ -1,9 +1,10 @@
 package cn.tpkf.bot.controller;
 
+import cn.tpkf.bot.core.commend.DisplayTimeCommend;
 import cn.tpkf.bot.core.devices.digital.output.DigitalOutputDevice;
 import cn.tpkf.bot.core.devices.i2c.adda.Pcf8591;
 import cn.tpkf.bot.core.devices.i2c.display.oled.OledDisplayDevice;
-import cn.tpkf.bot.core.function.DisplayInfoFunction;
+import cn.tpkf.bot.core.function.AsyncFunction;
 import cn.tpkf.bot.core.function.Function;
 import cn.tpkf.bot.core.manager.DeviceManager;
 import cn.tpkf.bot.entity.base.ResultEntity;
@@ -59,7 +60,7 @@ public class TestController {
 
     @GetMapping("/function")
     public ResultEntity<Void> function() {
-        Function function = new DisplayInfoFunction("test", asyncExecutor, deviceManager.getOled());
+        Function function = new AsyncFunction("display", asyncExecutor, null, null, new DisplayTimeCommend("", deviceManager.getOled()));
         function.run();
         return ResultEntity.success();
     }
