@@ -16,7 +16,7 @@
     <description>pi-bot-boot</description>
 
     <properties>
-        <java.version>19</java.version>
+        <java.version>17</java.version>
         <pi4j.version>2.2.1</pi4j.version>
     </properties>
 

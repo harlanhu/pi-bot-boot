@@ -1,5 +1,7 @@
 package cn.tpkf.bot.controller;
 
+import cn.tpkf.bot.core.function.DisplayFunction;
+import cn.tpkf.bot.core.function.Function;
 import cn.tpkf.bot.core.manager.DeviceManager;
 import cn.tpkf.bot.core.devices.digital.output.Buzzer;
 import cn.tpkf.bot.core.devices.i2c.adda.Pcf8591;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 /**
  * @author Harlan
@@ -27,6 +30,8 @@ import java.util.Map;
 public class TestController {
 
     private final DeviceManager deviceManager;
+
+    private final Executor asyncExecutor;
 
     @GetMapping("/buzzer")
     public ResultEntity<Boolean> toggle() {
@@ -46,10 +51,16 @@ public class TestController {
     }
 
     @GetMapping("/oled12864/{x}/{y}/{text}")
-    public ResultEntity<Object> oled12864(@PathVariable Integer x, @PathVariable Integer y, @PathVariable String text) {
+    public ResultEntity<Void> oled12864(@PathVariable Integer x, @PathVariable Integer y, @PathVariable String text) {
         Oled12864 oled12864 = deviceManager.getOled12864();
         oled12864.displayStr(text, x, y, true);
         return ResultEntity.success();
     }
 
+    @GetMapping("/function")
+    public ResultEntity<Void> function() {
+        Function function = new DisplayFunction("test", deviceManager, asyncExecutor);
+        function.run();
+        return ResultEntity.success();
+    }
 }
