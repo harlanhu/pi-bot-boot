@@ -87,6 +87,7 @@ public class AsyncFunction extends AbstractFunction {
             log.warn("{} Function is not stop!", name);
             return;
         }
+        currentCommendIndex.set(0);
         condition.signal();
     }
 }
