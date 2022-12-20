@@ -54,7 +54,7 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
      * @param y 显示坐标 y
      * @param state 状态
      */
-    void setCharPixel(char c, Font font, int x, int y, boolean state);
+    void setPixel(char c, Font font, int x, int y, boolean state);
 
     /**
      * 设置字符像素
@@ -63,7 +63,7 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
      * @param y 显示坐标 y
      * @param state 状态
      */
-    void setCharPixel(char c, int x, int y, boolean state);
+    void setPixel(char c, int x, int y, boolean state);
 
     /**
      * 设置字符串像素
@@ -72,7 +72,7 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
      * @param y 显示坐标 y
      * @param state 状态
      */
-    void setStrPixel(String text, int x, int y, boolean state);
+    void setPixel(String text, int x, int y, boolean state);
 
     /**
      * 添加设置字符串像素
@@ -82,7 +82,7 @@ public interface OledDisplayDevice extends DisplayDevice, SingleDevice, I2cDevic
      * @param y 显示坐标 y
      * @param state 状态
      */
-    void setStrPixel(String text, Font font, int x, int y, boolean state);
+    void setPixel(String text, Font font, int x, int y, boolean state);
 
     /**
      * 显示字符

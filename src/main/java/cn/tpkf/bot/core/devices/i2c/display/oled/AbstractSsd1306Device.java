@@ -149,7 +149,7 @@ public abstract class AbstractSsd1306Device extends AbstractI2cDevice implements
     }
 
     @Override
-    public void setCharPixel(char c, Font font, int x, int y, boolean state) {
+    public void setPixel(char c, Font font, int x, int y, boolean state) {
         lock.lock();
         try {
             if (c > font.getMaxChar() || c < font.getMinChar()) {
@@ -163,12 +163,12 @@ public abstract class AbstractSsd1306Device extends AbstractI2cDevice implements
     }
 
     @Override
-    public void setCharPixel(char c, int x, int y, boolean state) {
-        setCharPixel(c,  Font.FONT_4X5, x, y, state);
+    public void setPixel(char c, int x, int y, boolean state) {
+        setPixel(c,  Font.FONT_4X5, x, y, state);
     }
 
     @Override
-    public void setStrPixel(String text, Font font, int x, int y, boolean state) {
+    public void setPixel(String text, Font font, int x, int y, boolean state) {
         lock.lock();
         try {
             int posX = x;
@@ -180,7 +180,7 @@ public abstract class AbstractSsd1306Device extends AbstractI2cDevice implements
                 } else {
                     if (posX >= 0 && posX + font.getWidth() < getDisplayWidth()
                             && posY >= 0 && posY + font.getHeight() < getDisplayHeight()) {
-                        setCharPixel(c, font, posX, posY, state);
+                        setPixel(c, font, posX, posY, state);
                     }
                     posX += font.getOuterWidth();
                 }
@@ -191,8 +191,8 @@ public abstract class AbstractSsd1306Device extends AbstractI2cDevice implements
     }
 
     @Override
-    public void setStrPixel(String text, int x, int y, boolean state) {
-        setStrPixel(text, Font.FONT_5X8, x, y, state);
+    public void setPixel(String text, int x, int y, boolean state) {
+        setPixel(text, Font.FONT_5X8, x, y, state);
     }
 
     @Override
@@ -209,13 +209,13 @@ public abstract class AbstractSsd1306Device extends AbstractI2cDevice implements
 
     @Override
     public void appendDisplayChar(char c, int x, int y, boolean state) {
-        setCharPixel(c, x, y, state);
+        setPixel(c, x, y, state);
         display();
     }
 
     @Override
     public void appendDisplayChar(char c, Font font, int x, int y, boolean state) {
-        setCharPixel(c, font, x, y, state);
+        setPixel(c, font, x, y, state);
         display();
     }
 
@@ -233,13 +233,13 @@ public abstract class AbstractSsd1306Device extends AbstractI2cDevice implements
 
     @Override
     public void appendDisplayStr(String text, Font font, int x, int y, boolean state) {
-        setStrPixel(text, font, x, y, state);
+        setPixel(text, font, x, y, state);
         display();
     }
 
     @Override
     public void appendDisplayStr(String text, int x, int y, boolean state) {
-        setStrPixel(text, x, y, state);
+        setPixel(text, x, y, state);
         display();
     }
 
@@ -259,7 +259,7 @@ public abstract class AbstractSsd1306Device extends AbstractI2cDevice implements
     public void appendDisplayStrCentered(String text, Font font, int y, boolean state) {
         final int strSizeX = text.length() * font.getOuterWidth();
         final int x = (getDisplayWidth() - strSizeX) / 2;
-        setStrPixel(text, font, x, y, state);
+        setPixel(text, font, x, y, state);
     }
 
     @Override
