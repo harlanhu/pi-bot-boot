@@ -2,14 +2,12 @@ package cn.tpkf.bot.core.function;
 
 import cn.tpkf.bot.core.commend.Commend;
 import cn.tpkf.bot.enums.FunctionStateEnums;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -21,38 +19,22 @@ import java.util.concurrent.locks.ReentrantLock;
  * @date 2022 12 18 下午 05:32
  */
 @Slf4j
-@Data
-public class AsyncFunction implements Function {
+public class AsyncFunction extends AbstractFunction {
 
-    private final String name;
-
-    private final Commend setUpCommend;
-
-    private final Commend stopCommend;
-
-    private final List<Commend> commends;
-
-    private FunctionStateEnums state;
+    private final Executor asyncExecutor;
 
     private final ReentrantLock lock = new ReentrantLock();
 
     private final Condition condition = lock.newCondition();
 
-    private Integer currentCommendIndex = 0;
-
     private final Long commendExecuteTime;
 
     private final TimeUnit timeUnit;
 
-    private final Executor asyncExecutor;
-
-    protected AsyncFunction(String name, Executor asyncExecutor, Commend setUpCommend, Commend stopCommend, List<Commend> commends, Long commendExecuteTime, TimeUnit timeUnit) {
-        this.name = name;
+    public AsyncFunction(String name, Executor asyncExecutor, Commend setUpCommend, Commend stopCommend, List<Commend> commends, Long commendExecuteTime, TimeUnit timeUnit) {
+        super(name, setUpCommend, stopCommend, commends);
         this.asyncExecutor = asyncExecutor;
-        this.commends = commends;
         this.commendExecuteTime = commendExecuteTime;
-        this.setUpCommend = setUpCommend;
-        this.stopCommend = stopCommend;
         this.timeUnit = timeUnit;
         setUp();
     }
@@ -67,18 +49,6 @@ public class AsyncFunction implements Function {
 
     public AsyncFunction(String name, Executor asyncExecutor, Commend setUpCommend, Commend stopCommend, Commend commend) {
         this(name, asyncExecutor, setUpCommend, stopCommend, Collections.singletonList(commend));
-    }
-
-    @Override
-    public void setUp() {
-        if (state == FunctionStateEnums.RUNNING) {
-            log.warn("{} Function is running!", name);
-            return;
-        }
-        if (Objects.nonNull(setUpCommend)) {
-            setUpCommend.execute();
-        }
-        state = FunctionStateEnums.SETUP;
     }
 
     @Override
@@ -112,38 +82,11 @@ public class AsyncFunction implements Function {
     }
 
     @Override
-    public void stop() {
-        if (state != FunctionStateEnums.RUNNING) {
-            log.warn("{} Function is not running!", name);
-            return;
-        }
-        if (Objects.nonNull(stopCommend)) {
-            stopCommend.execute();
-        }
-        state = FunctionStateEnums.STOP;
-    }
-
-    @Override
     public void reRun() {
         if (state == FunctionStateEnums.STOP) {
             log.warn("{} Function is not stop!", name);
             return;
         }
         condition.signal();
-    }
-
-    @Override
-    public boolean isRunning() {
-        return state == FunctionStateEnums.RUNNING;
-    }
-
-    @Override
-    public Commend getCommend(int index) {
-        return commends.get(index);
-    }
-
-    @Override
-    public Commend getCuurentCommend() {
-        return commends.get(currentCommendIndex);
     }
 }
