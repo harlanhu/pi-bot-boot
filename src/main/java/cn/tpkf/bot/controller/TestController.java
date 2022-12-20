@@ -60,7 +60,7 @@ public class TestController {
 
     @GetMapping("/function")
     public ResultEntity<Void> function() {
-        Function function = new AsyncFunction("display", asyncExecutor, null, null, new DisplayTimeCommend("", deviceManager.getOled()));
+        Function function = new AsyncFunction("display", asyncExecutor, null, null, new DisplayTimeCommend(deviceManager.getOled()));
         function.run();
         return ResultEntity.success();
     }

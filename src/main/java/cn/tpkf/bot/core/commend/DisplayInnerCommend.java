@@ -9,8 +9,9 @@ import cn.tpkf.bot.core.devices.i2c.display.oled.OledDisplayDevice;
  */
 public class DisplayInnerCommend extends AbstractDisplayCommend {
 
-    public DisplayInnerCommend(String name, OledDisplayDevice oledDisplayDevice) {
-        super(name, oledDisplayDevice);
+
+    public DisplayInnerCommend(OledDisplayDevice oledDisplayDevice) {
+        super(oledDisplayDevice);
     }
 
     @Override

@@ -13,8 +13,8 @@ import java.time.format.DateTimeFormatter;
  */
 public class DisplayTimeCommend extends AbstractDisplayCommend {
 
-    public DisplayTimeCommend(String name, OledDisplayDevice oledDisplayDevice) {
-        super(name, oledDisplayDevice);
+    public DisplayTimeCommend(OledDisplayDevice oledDisplayDevice) {
+        super(oledDisplayDevice);
     }
 
     @Override

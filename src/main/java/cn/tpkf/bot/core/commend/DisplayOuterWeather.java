@@ -9,8 +9,8 @@ import cn.tpkf.bot.core.devices.i2c.display.oled.OledDisplayDevice;
  */
 public class DisplayOuterWeather extends AbstractDisplayCommend {
 
-    public DisplayOuterWeather(String name, OledDisplayDevice oledDisplayDevice) {
-        super(name, oledDisplayDevice);
+    public DisplayOuterWeather(OledDisplayDevice oledDisplayDevice) {
+        super(oledDisplayDevice);
     }
 
     @Override
