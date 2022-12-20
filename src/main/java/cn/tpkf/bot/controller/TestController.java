@@ -1,11 +1,11 @@
 package cn.tpkf.bot.controller;
 
-import cn.tpkf.bot.core.function.DisplayFunction;
+import cn.tpkf.bot.core.devices.digital.output.DigitalOutputDevice;
+import cn.tpkf.bot.core.devices.i2c.adda.Pcf8591;
+import cn.tpkf.bot.core.devices.i2c.display.oled.OledDisplayDevice;
+import cn.tpkf.bot.core.function.DisplayInfoFunction;
 import cn.tpkf.bot.core.function.Function;
 import cn.tpkf.bot.core.manager.DeviceManager;
-import cn.tpkf.bot.core.devices.digital.output.Buzzer;
-import cn.tpkf.bot.core.devices.i2c.adda.Pcf8591;
-import cn.tpkf.bot.core.devices.i2c.display.oled.Oled12864;
 import cn.tpkf.bot.entity.base.ResultEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +35,7 @@ public class TestController {
 
     @GetMapping("/buzzer")
     public ResultEntity<Boolean> toggle() {
-        Buzzer buzzer = deviceManager.getBuzzer();
+        DigitalOutputDevice buzzer = deviceManager.getBuzzer();
         return ResultEntity.success(buzzer.toggle());
     }
 
@@ -52,14 +52,14 @@ public class TestController {
 
     @GetMapping("/oled12864/{x}/{y}/{text}")
     public ResultEntity<Void> oled12864(@PathVariable Integer x, @PathVariable Integer y, @PathVariable String text) {
-        Oled12864 oled12864 = deviceManager.getOled12864();
+        OledDisplayDevice oled12864 = deviceManager.getOled();
         oled12864.displayStr(text, x, y, true);
         return ResultEntity.success();
     }
 
     @GetMapping("/function")
     public ResultEntity<Void> function() {
-        Function function = new DisplayFunction("test", deviceManager, asyncExecutor);
+        Function function = new DisplayInfoFunction("test", asyncExecutor, deviceManager.getOled());
         function.run();
         return ResultEntity.success();
     }

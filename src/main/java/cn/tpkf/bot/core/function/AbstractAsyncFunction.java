@@ -1,6 +1,5 @@
 package cn.tpkf.bot.core.function;
 
-import cn.tpkf.bot.core.manager.DeviceManager;
 import cn.tpkf.bot.enums.FunctionStateEnums;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @Slf4j
 @Getter
-public abstract class AbstractFunction implements Function {
+public abstract class AbstractAsyncFunction implements Function {
 
     protected final String name;
 
@@ -26,13 +25,10 @@ public abstract class AbstractFunction implements Function {
 
     protected final Condition condition = lock.newCondition();
 
-    protected final DeviceManager deviceManager;
-
     protected final Executor asyncExecutor;
 
-    protected AbstractFunction(String name, DeviceManager deviceManager, Executor asyncExecutor) {
+    protected AbstractAsyncFunction(String name, Executor asyncExecutor) {
         this.name = name;
-        this.deviceManager = deviceManager;
         this.asyncExecutor = asyncExecutor;
         setUp();
     }
@@ -100,7 +96,6 @@ public abstract class AbstractFunction implements Function {
             log.warn("{} Function is not stop!", name);
             return;
         }
-        state = FunctionStateEnums.RUNNING;
         condition.signal();
     }
 

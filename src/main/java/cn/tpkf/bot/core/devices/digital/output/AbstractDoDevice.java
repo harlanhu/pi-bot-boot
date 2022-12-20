@@ -63,10 +63,12 @@ public abstract class AbstractDoDevice extends AbstractDelayDevice implements Di
         return digitalOutput.state();
     }
 
+    @Override
     public void on() {
         digitalOutput.setState(onState.getValue().intValue());
     }
 
+    @Override
     public void on(long duration, TimeUnit timeUnit) {
         lock.lock();
         try {
@@ -78,19 +80,23 @@ public abstract class AbstractDoDevice extends AbstractDelayDevice implements Di
         }
     }
 
+    @Override
     public void off() {
         digitalOutput.setState(offState.getValue().intValue());
     }
 
+    @Override
     public boolean toggle() {
         getDigitalOutput().toggle();
         return getDigitalOutput().isOff();
     }
 
+    @Override
     public void setState(DigitalState state) {
         digitalOutput.setState(state.getValue().intValue());
     }
 
+    @Override
     public void loop(long duration, int loop, TimeUnit timeUnit) {
         if (loop <= 0 || duration <= 0) {
             return;
@@ -106,10 +112,12 @@ public abstract class AbstractDoDevice extends AbstractDelayDevice implements Di
         }
     }
 
+    @Override
     public void loop() {
         loop(200, 1, TimeUnit.MILLISECONDS);
     }
 
+    @Override
     public void cycle(long duration, int loop, long interval, int cycle, TimeUnit timeUnit) {
         if (duration == 0 || loop == 0 || cycle == 0 || interval < 0) {
             return;
@@ -126,6 +134,7 @@ public abstract class AbstractDoDevice extends AbstractDelayDevice implements Di
         }
     }
 
+    @Override
     public void cycle() {
         cycle(200, 3, 500, 1, TimeUnit.MILLISECONDS);
     }
