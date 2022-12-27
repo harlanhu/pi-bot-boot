@@ -72,7 +72,7 @@ public class AsyncFunction extends AbstractFunction {
                 while (endTime.isAfter(LocalDateTime.now())) {
                     getCuurentCommend().execute();
                 }
-                if (currentCommendIndex.get() == commends.size()) {
+                if (currentCommendIndex.get() >= commends.size() - 1) {
                     currentCommendIndex.set(0);
                 } else {
                     currentCommendIndex.incrementAndGet();

@@ -6,3 +6,6 @@ spring:
     active: dev
   application:
     name: pi-bot-boot
+
+amap:
+  key: 2c9b887f462ccf91d73f342617c2d2d5

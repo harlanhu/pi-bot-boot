@@ -22,6 +22,7 @@ public class DisplayTimeCommend extends AbstractDisplayCommend {
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         String dayOfWeek = LocalDate.now().getDayOfWeek().name();
         String time = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+        oledDisplayDevice.resetDataBuffer();
         oledDisplayDevice.setPixel(date + " " + dayOfWeek, 0, 0, true);
         oledDisplayDevice.setPixel(time, 0, 30, true);
         oledDisplayDevice.display();
